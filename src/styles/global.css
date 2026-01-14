@@ -1,0 +1,204 @@
+:root {
+  --color-bg: #0a0e14;
+  --color-surface: #13171f;
+  --color-surface-elevated: #1a1f2a;
+  --color-border: #2a3040;
+  --color-text: #c5cdd9;
+  --color-text-muted: #7d8799;
+  --color-text-heading: #e6eaf0;
+  --color-accent: #4a9eff;
+  --color-accent-dim: #3a7acc;
+  --color-success: #6bb56a;
+  --color-warning: #d4a047;
+  
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  
+  --spacing-unit: 8px;
+  --radius: 4px;
+  --max-width: 900px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: calc(var(--spacing-unit) * 4);
+}
+
+h1, h2, h3, h4 {
+  color: var(--color-text-heading);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: calc(var(--spacing-unit) * 6);
+  margin-bottom: calc(var(--spacing-unit) * 3);
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-top: calc(var(--spacing-unit) * 4);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+p {
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-text-heading);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface-elevated);
+  padding: 2px 6px;
+  border-radius: var(--radius);
+}
+
+pre {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: calc(var(--spacing-unit) * 2);
+  overflow-x: auto;
+  margin-bottom: calc(var(--spacing-unit) * 3);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+ul, ol {
+  margin-left: calc(var(--spacing-unit) * 3);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+li {
+  margin-bottom: calc(var(--spacing-unit) * 1);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: calc(var(--spacing-unit) * 6) 0;
+}
+
+.status-box {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius);
+  padding: calc(var(--spacing-unit) * 3);
+  margin-bottom: calc(var(--spacing-unit) * 4);
+}
+
+.status-box h3 {
+  margin-top: 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.status-box p {
+  margin-bottom: 0;
+  color: var(--color-text-heading);
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1.5);
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) * 2);
+  color: var(--color-text-muted);
+  margin-right: calc(var(--spacing-unit) * 1);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  text-transform: lowercase;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1.5);
+  border-radius: calc(var(--radius) * 2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge.complete {
+  background: rgba(107, 181, 106, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(107, 181, 106, 0.2);
+}
+
+.badge.in-progress {
+  background: rgba(212, 160, 71, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(212, 160, 71, 0.2);
+}
+
+.badge.planned {
+  background: rgba(74, 158, 255, 0.1);
+  color: var(--color-accent);
+  border: 1px solid rgba(74, 158, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: calc(var(--spacing-unit) * 3);
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+}

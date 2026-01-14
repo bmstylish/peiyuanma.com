@@ -1,0 +1,131 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About • Peiyuan (Bobby) Ma"
+  description="Who I am, what I'm learning, and what I'm building."
+>
+  <h1>About</h1>
+
+  <section>
+    <h2>Quick intro</h2>
+    <p>
+      I’m Bobby Ma — a cybersecurity student building a practical portfolio through
+      projects, lab exercises, and writing. This site is where I ship work, document
+      results, and track progress as I level up.
+    </p>
+  </section>
+
+  <section>
+    <h2>What I’m aiming for</h2>
+    <p>
+      I’m interested in defensive security: how systems fail, how attacks show up in
+      telemetry, and how to design controls that are realistic to operate.
+    </p>
+    <p>
+      I’m also building up my fundamentals (networking, Linux, scripting) so I can
+      go from “I understand the idea” to “I can implement and validate it.”
+    </p>
+  </section>
+
+  <section>
+    <h2>Home lab</h2>
+    <p>
+      I run a small Ubuntu server as a learning platform — monitoring, alerts, and
+      automation included. Over time, I’ll publish writeups on what I build and the
+      problems I hit along the way (deployments, hardening, and debugging included).
+    </p>
+  </section>
+
+  <section>
+    <h2>Tools I’m using</h2>
+    <div class="tool-grid">
+      <div class="tool-category">
+        <h3>Foundations</h3>
+        <ul>
+          <li>Networking basics (routing, DNS, HTTP)</li>
+          <li>Linux administration</li>
+          <li>Shell scripting</li>
+        </ul>
+      </div>
+
+      <div class="tool-category">
+        <h3>Security learning</h3>
+        <ul>
+          <li>Log investigation mindset</li>
+          <li>Threat modeling basics</li>
+          <li>Web security fundamentals</li>
+        </ul>
+      </div>
+
+      <div class="tool-category">
+        <h3>Build & deploy</h3>
+        <ul>
+          <li>Astro (this site)</li>
+          <li>Git / GitHub</li>
+          <li>Cloudflare Tunnel (CGNAT-friendly)</li>
+        </ul>
+      </div>
+
+      <div class="tool-category">
+        <h3>Next up</h3>
+        <ul>
+          <li>Docker + reverse proxy routing</li>
+          <li>More structured labs + writeups</li>
+          <li>Security automation projects</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>
+      Best way to reach me: <a href="mailto:mpy.peiyuan@gmail.com">mpy.peiyuan@gmail.com</a>.
+      You can also find me on <a href="https://github.com/bmstylish" target="_blank" rel="noopener">GitHub</a>
+      and <a href="https://www.linkedin.com/in/mpy-bobby" target="_blank" rel="noopener">LinkedIn</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    margin-bottom: calc(var(--spacing-unit) * 6);
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: calc(var(--spacing-unit) * 4);
+    margin-top: calc(var(--spacing-unit) * 3);
+  }
+
+  .tool-category h3 {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    color: var(--color-text-heading);
+  }
+
+  .tool-category ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tool-category li {
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    padding-left: calc(var(--spacing-unit) * 2);
+    position: relative;
+  }
+
+  .tool-category li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+</style>

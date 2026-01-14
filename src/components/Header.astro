@@ -1,0 +1,94 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/labs', label: 'Labs' },
+  { href: '/blog', label: 'Blog' },
+];
+---
+
+<header>
+  <div class="header-content">
+    <div class="header-title">
+      <a href="/" class="logo">peiyuan.ma</a>
+    </div>
+    <nav>
+      {navItems.map(item => (
+        <a
+          href={item.href}
+          class:list={[
+            'nav-link',
+            { active: currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-heading);
+  }
+
+  .logo:hover {
+    color: var(--color-accent);
+  }
+
+  nav {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 3);
+  }
+
+  .nav-link {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-heading);
+  }
+
+  .nav-link.active {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      gap: calc(var(--spacing-unit) * 2);
+      align-items: flex-start;
+    }
+
+    nav {
+      gap: calc(var(--spacing-unit) * 2);
+    }
+  }
+</style>

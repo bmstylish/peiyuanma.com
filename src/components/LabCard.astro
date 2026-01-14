@@ -1,0 +1,102 @@
+---
+interface Props {
+  title: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  objective: string;
+  tools: string[];
+  status: 'complete' | 'in-progress' | 'planned';
+  description: string;
+}
+
+const { title, difficulty, objective, tools, status, description } = Astro.props;
+
+const difficultyColors: Record<string, string> = {
+  beginner: 'var(--color-success)',
+  intermediate: 'var(--color-warning)',
+  advanced: 'var(--color-accent)'
+};
+---
+
+<article class="lab-card">
+  <div class="lab-header">
+    <h3>{title}</h3>
+    <div class="lab-meta">
+      <span class="difficulty" style={`color: ${difficultyColors[difficulty]}`}>
+        {difficulty}
+      </span>
+      <span class:list={['badge', status.replace('-', '')]}>{status}</span>
+    </div>
+  </div>
+  
+  <div class="lab-objective">
+    <strong>Objective:</strong> {objective}
+  </div>
+  
+  <p class="lab-description">{description}</p>
+  
+  <div class="lab-tools">
+    <strong>Tools:</strong>
+    {tools.map(tool => <span class="tag">{tool}</span>)}
+  </div>
+</article>
+
+<style>
+  .lab-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: calc(var(--spacing-unit) * 3);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+  
+  .lab-header {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 1);
+  }
+  
+  .lab-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--color-text-heading);
+  }
+  
+  .lab-meta {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+  
+  .difficulty {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  
+  .lab-objective {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+  }
+  
+  .lab-objective strong {
+    color: var(--color-text-heading);
+  }
+  
+  .lab-description {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  
+  .lab-tools {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+  
+  .lab-tools strong {
+    color: var(--color-text-heading);
+  }
+</style>

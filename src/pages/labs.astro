@@ -1,0 +1,87 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LabCard from '@/components/LabCard.astro';
+---
+
+<BaseLayout
+  title="Labs • Peiyuan Ma"
+  description="Hands-on cybersecurity practice labs and writeups."
+>
+  <h1>Labs</h1>
+  <p class="page-intro">
+    This section is where I publish hands-on exercises and writeups. For now I’m
+    focusing on repeatable setups and clear documentation.
+  </p>
+
+  <div class="labs-notice">
+    <h3>Labs subdomain</h3>
+    <p>
+      I’ve reserved <strong>labs.peiyuanma.com</strong> for future interactive labs.
+      For now, this page tracks lab topics and progress.
+    </p>
+  </div>
+
+  <div class="labs-grid">
+    <LabCard
+      title="Server Hardening Checklist"
+      difficulty="beginner"
+      objective="Harden a fresh Linux server and document the baseline"
+      tools={['SSH', 'UFW', 'systemd']}
+      status="complete"
+      description="Lock down access, configure firewall rules, and make services observable with logs and alerts."
+    />
+
+    <LabCard
+      title="Log Investigation Basics"
+      difficulty="beginner"
+      objective="Practice extracting a timeline from logs"
+      tools={['journalctl', 'grep', 'jq']}
+      status="in-progress"
+      description="Build a simple workflow to answer: what happened, when, and what evidence supports it."
+    />
+
+    <LabCard
+      title="Web App Security Notes"
+      difficulty="intermediate"
+      objective="Understand common bugs and how they show up in requests/logs"
+      tools={['Burp Suite', 'HTTP', 'OWASP']}
+      status="planned"
+      description="Start with fundamentals (auth, input handling) before attempting more complex exploitation."
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+  }
+
+  .labs-notice {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: calc(var(--spacing-unit) * 3);
+    margin-bottom: calc(var(--spacing-unit) * 6);
+  }
+
+  .labs-notice h3 {
+    margin-top: 0;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    font-size: 1rem;
+    color: var(--color-text-heading);
+  }
+
+  .labs-notice p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: calc(var(--spacing-unit) * 3);
+  }
+</style>

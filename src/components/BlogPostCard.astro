@@ -1,0 +1,90 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+  slug: string;
+}
+
+const { title, description, date, tags, slug } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric'
+});
+---
+
+<article class="post-card">
+  <a href={`/blog/${slug}`} class="post-link">
+    <div class="post-header">
+      <h2>{title}</h2>
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+    </div>
+    <p class="post-description">{description}</p>
+    <div class="post-tags">
+      {tags.map(tag => <span class="tag">{tag}</span>)}
+    </div>
+  </a>
+</article>
+
+<style>
+  .post-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: all 0.2s;
+  }
+  
+  .post-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  
+  .post-link {
+    display: block;
+    padding: calc(var(--spacing-unit) * 4);
+    color: inherit;
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .post-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-text-heading);
+  }
+  
+  .post-header time {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  
+  .post-description {
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--spacing-unit) * 3);
+  }
+  
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing-unit) * 1);
+  }
+  
+  @media (max-width: 768px) {
+    .post-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: calc(var(--spacing-unit) * 1);
+    }
+  }
+</style>

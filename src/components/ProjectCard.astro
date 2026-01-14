@@ -1,0 +1,108 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  stack: string[];
+  github?: string;
+  demo?: string;
+  status: 'active' | 'complete' | 'archived';
+  lessons?: string;
+}
+
+const { title, description, stack, github, demo, status, lessons } = Astro.props;
+---
+
+<article class="project-card">
+  <div class="project-header">
+    <h3>{title}</h3>
+    <span class:list={['badge', status]}>{status}</span>
+  </div>
+  
+  <p class="project-description">{description}</p>
+  
+  <div class="project-stack">
+    {stack.map(tech => <span class="tag">{tech}</span>)}
+  </div>
+  
+  {lessons && (
+    <div class="project-lessons">
+      <strong>Lessons:</strong> {lessons}
+    </div>
+  )}
+  
+  <div class="project-links">
+    {github && (
+      <a href={github} target="_blank" rel="noopener" class="project-link">
+        View Source →
+      </a>
+    )}
+    {demo && (
+      <a href={demo} target="_blank" rel="noopener" class="project-link">
+        Live Demo →
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: calc(var(--spacing-unit) * 4);
+  }
+  
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .project-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-text-heading);
+  }
+  
+  .project-description {
+    color: var(--color-text);
+    margin-bottom: calc(var(--spacing-unit) * 3);
+  }
+  
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing-unit) * 1);
+    margin-bottom: calc(var(--spacing-unit) * 3);
+  }
+  
+  .project-lessons {
+    background: var(--color-surface-elevated);
+    border-left: 2px solid var(--color-accent);
+    padding: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 3);
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+  }
+  
+  .project-lessons strong {
+    color: var(--color-accent);
+  }
+  
+  .project-links {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 3);
+  }
+  
+  .project-link {
+    font-size: 0.9375rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+  
+  .project-link:hover {
+    color: var(--color-text-heading);
+  }
+</style>

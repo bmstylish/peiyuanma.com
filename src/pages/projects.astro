@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+---
+
+<BaseLayout
+  title="Projects • Peiyuan Ma"
+  description="Projects I've built while learning cybersecurity and infrastructure."
+>
+  <h1>Projects</h1>
+  <p class="page-intro">
+    A mix of shipped work and in-progress builds. I keep these honest: what I built,
+    why I built it, and what I learned.
+  </p>
+
+  <div class="projects-grid">
+    <ProjectCard
+      title="Home Server Monitoring + Discord Alerts"
+      description="Ubuntu server with health checks and automated Discord notifications for uptime/temperature/status."
+      stack={['Ubuntu', 'systemd', 'Bash', 'Discord Webhooks']}
+      github="https://github.com/YOUR_GITHUB/server-config"
+      status="active"
+      lessons="Reliability comes from boring basics: services, timers, logs, and alerts you actually notice."
+    />
+
+    <ProjectCard
+      title="Portfolio + Blog (Astro)"
+      description="Static portfolio website with Markdown blog, clean design system, and a structure built for long-term writing."
+      stack={['Astro', 'Markdown', 'CSS']}
+      github="https://github.com/YOUR_GITHUB/YOUR_REPO"
+      status="active"
+      lessons="A portfolio is a product: structure and clarity matter more than fancy animations."
+    />
+
+    <ProjectCard
+      title="Cyber Labs (Writeups First)"
+      description="A growing set of lab exercises focused on fundamentals. Starting with documentation and repeatability before spinning up vulnerable machines."
+      stack={['Linux', 'Networking', 'Documentation']}
+      status="planned"
+      lessons="If a lab isn’t repeatable, it’s not really a lab — it’s just a one-off experiment."
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--spacing-unit) * 6);
+  }
+
+  .projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 4);
+  }
+</style>
