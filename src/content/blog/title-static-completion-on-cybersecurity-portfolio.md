@@ -5,11 +5,10 @@ description: Building a static-first personal site with Astro, Cloudflare Pages,
   maintainability.
 date: 2026-01-15
 tags:
-  - Astro
-  - Cloudflare
-  - Static Sites
-  - Web Security
-  - DevOps
+  - astro
+  - cloudflare
+  - static sites
+  - web security
 draft: false
 ---
 # Project Goals
