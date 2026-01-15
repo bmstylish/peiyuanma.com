@@ -1,8 +1,15 @@
 ---
-title: "title: Static Completion on Cybersecurity Portfolio"
-description: "The journey to setting up the website "
+title: Static Completion on Cybersecurity Portfolio
+description: Building a static-first personal site with Astro, Cloudflare Pages,
+  and Decap CMS, focusing on simplicity, security, and long-term
+  maintainability.
 date: 2026-01-15
-tags: []
+tags:
+  - Astro
+  - Cloudflare
+  - Static Sites
+  - Web Security
+  - DevOps
 draft: false
 ---
 # Project Goals
