@@ -3,7 +3,7 @@ title: "title: Static Completion on Cybersecurity Portfolio"
 description: "The journey to setting up the website "
 date: 2026-01-15
 tags: []
-draft: true
+draft: false
 ---
 # Project Goals
 
