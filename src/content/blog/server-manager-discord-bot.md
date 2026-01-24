@@ -10,7 +10,7 @@ draft: false
 ---
 Haven't updated in the last few days due to (1) MST, I was doing revision and preparing to sit my MST. (2) Writing and debugging the code for the Discord bot. 
 
-## Goal for the Discord bot 
+## Goal for the Discord bot
 
 * Slash only commands 
 * Runs on Ubuntu Server 
@@ -45,8 +45,10 @@ As I went through the process to make sure that my CA certificates were installe
 
 The solution was rather simple, I just have to make the service wait for the network and time synchronization before running.
 
-## Whats Next 
+## Whats Next
 
+* Set up architecture diagram
+* Server Hardening
 * Set up labs subdomain 
 * Start implementing labs 
 * More bot functions
