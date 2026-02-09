@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LabCard from '../../components/LabCard.astro';
+
+const allLabs = await getCollection('labs');
+const labs = allLabs
+  .filter((l) => !l.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Labs" description="Hands-on security labs and writeups">
+  <h1>Labs</h1>
+  <p class="page-intro">
+    Hands-on exercises and writeups. Click a lab to view the full report.
+  </p>
+
+  <div class="labs-grid">
+    {labs.map((lab) => (
+      <LabCard
+        title={lab.data.title}
+        difficulty={lab.data.difficulty}
+        tools={lab.data.tools}
+        status={lab.data.status}
+        description={lab.data.description}
+        href={`/labs/${lab.id}`}
+      />
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+  }
+
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: calc(var(--spacing-unit) * 3);
+  }
+</style>

@@ -4,10 +4,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogPostCard from '@/components/BlogPostCard.astro';
 
 const allPosts = await getCollection('blog');
+console.log("Blog Posts Found:", allPosts.map(p => p.slug));
 const posts = allPosts
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
+console.log("VISIBLE POSTS:", posts.map(p => ({ slug: p.slug, draft: p.data.draft, date: p.data.date })));
 const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
 ---
 

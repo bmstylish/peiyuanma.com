@@ -1,3 +1,14 @@
+# ================ #
+# Local Dev        #
+# ================ #
+#local_backend: true
+#
+#backend:
+#  name: proxy
+#  proxy_url: http://localhost:8081/api/v1
+#  branch: main
+###################
+
 site_url: https://peiyuanma.com
 
 backend:
@@ -25,3 +36,20 @@ collections:
       - { label: "Tags", name: "tags", widget: "list", default: [] }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown" }
+  - name: "labs"
+    label: "Labs"
+    folder: "src/content/labs"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Difficulty", name: "difficulty", widget: "select", options: ["beginner", "intermediate", "advanced"] }
+      - { label: "Tools", name: "tools", widget: "list", default: [] }
+      - { label: "Status", name: "status", widget: "select", options: ["planned", "in-progress", "complete"] }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
