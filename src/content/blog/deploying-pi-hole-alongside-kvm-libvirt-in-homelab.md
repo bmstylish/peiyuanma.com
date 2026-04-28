@@ -2,8 +2,12 @@
 title: "Deploying Pi-Hole alongside KVM/libvirt in Homelab "
 description: "Setting up a DNS sinkhole (Pi-hole) on home server "
 date: 2026-04-28
-tags: []
-draft: true
+tags:
+  - pi-hole
+  - DNS
+  - homelab
+  - network
+draft: false
 ---
 ## **Goal**
 
@@ -54,3 +58,15 @@ All LAN devices use the router for DHCP, and the router advertises Pi-hole as th
 The libvirt lab network remains isolated and can optionally be configured to use Pi-hole for monitoring.
 
 The Minecraft server architecture remains unchanged, with traffic flowing from the internet through the router, into the Ubuntu server, and being forwarded via iptables to the Windows host.
+
+## Lessons Learned 
+
+* Services frequently compete for ports, and conflicts are not always obvious. It is important to check bindings before deploying new services.
+* Broken installations are often faster to reset than to repair incrementally.
+* Virtualization platforms introduce hidden infrastructure components such as dnsmasq that can interfere with other services.
+* Modern Linux DNS is layered and managed, so manual edits to resolv.conf are ineffective.
+* Separating responsibilities across services (DNS, routing, web hosting) makes debugging significantly easier.
+
+## Extra Note
+
+DHCP was deliberately removed when fixing the port 53 problem to enforce a deterministic lab environment. By assigning static IPs and automating VM provisioning, each machine becomes predictable, reproducible, and immediately accessible without relying on IP discovery mechanisms. A script was put in place to automate VM creation with static networking.
