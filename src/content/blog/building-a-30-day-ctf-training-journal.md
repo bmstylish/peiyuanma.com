@@ -102,7 +102,13 @@ Decap commits those changes to GitHub, which then triggers Cloudflare to rebuild
 
 ## Astro Routing and Content Collections
 
-The final route structure is:
+The final route structure is: 
+
+`/projects/30-days-of-ctf-winter-break-2026`
+
+`/projects/30-days-of-ctf-winter-break-2026/weeks/week-1`
+
+`/projects/30-days-of-ctf-winter-break-2026/days/day-01-bandit-010`
 
 The daily entries live in their own Astro content collection. I initially ran into a collection-path mismatch because the collection was named `ctfDays` while the content folder was named `ctf-days`.
 
