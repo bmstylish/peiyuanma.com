@@ -71,6 +71,27 @@ collections:
       - { label: "Status", name: "status", widget: "select", options: ["planned", "active", "complete", "archived"], default: "planned" }
       - { label: "Lessons", name: "lessons", widget: "text", required: false }
       - { label: "Project Write-up", name: "writeup", widget: "boolean", default: false }
+      - { label: "Journal ID", name: "journal", widget: "string", required: false, hint: "Connects this project to a daily journal." }
       - { label: "Display Order", name: "order", widget: "number", value_type: "int", min: 0, default: 0 }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown", required: false }
+  - name: "ctfDays"
+    label: "CTF Daily Journal"
+    label_singular: "CTF Day"
+    folder: "src/content/ctf-days"
+    create: true
+    slug: "day-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    sortable_fields: ["day", "status", "title"]
+    summary: "Day {{day}} — {{title}} ({{status}})"
+    fields:
+      - { label: "Project ID", name: "project", widget: "string", default: "ctf-winter-break-2026" }
+      - { label: "Day", name: "day", widget: "number", value_type: "int", min: 1, max: 30 }
+      - { label: "Week", name: "week", widget: "number", value_type: "int", min: 1, max: 5 }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Plan", name: "description", widget: "text" }
+      - { label: "Status", name: "status", widget: "select", options: ["planned", "in-progress", "complete"], default: "planned" }
+      - { label: "Completed Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", required: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Daily Notes", name: "body", widget: "markdown" }

@@ -1,27 +1,38 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtfWeekCard from '@/components/CtfWeekCard.astro';
 import TagLink from '@/components/TagLink.astro';
+import { ctfWeekDetails } from '@/data/ctfWeeks';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const [projects, journalEntries] = await Promise.all([
+    getCollection('projects'),
+    getCollection('ctfDays'),
+  ]);
+
   return projects
     .filter((project) => !project.data.draft && project.data.writeup)
     .map((project) => ({
       params: { slug: project.id.replace(/\.md$/, '') },
-      props: { project },
+      props: {
+        project,
+        journalEntries: journalEntries
+          .filter((entry) => !entry.data.draft && entry.data.project === project.data.journal)
+          .sort((a, b) => a.data.day - b.data.day),
+      },
     }));
 }
 
-const { project } = Astro.props;
+const { project, journalEntries } = Astro.props;
 const { Content } = await project.render();
+const projectSlug = project.id.replace(/\.md$/, '');
 ---
 
 <BaseLayout title={`${project.data.title} • Projects`} description={project.data.description}>
-  <article class="project-writeup">
+  <article class:list={['project-writeup', { 'has-journal': journalEntries.length > 0 }]}>
     <header class="project-header">
       <div class="project-heading">
-        <p class="eyebrow">Project source</p>
         <h1>{project.data.title}</h1>
         <p class="project-description">{project.data.description}</p>
       </div>
@@ -36,6 +47,33 @@ const { Content } = await project.render();
       <Content />
     </div>
 
+    {journalEntries.length > 0 && (
+      <section class="weeks-section" aria-labelledby="weeks-heading">
+        <div class="weeks-heading">
+          <h2 id="weeks-heading">Training journal</h2>
+          <p>Open a week to view its schedule and daily writing spaces.</p>
+        </div>
+
+        <div class="week-grid">
+          {ctfWeekDetails.map((week) => {
+            const entries = journalEntries.filter((entry) => entry.data.week === week.number);
+            const completedCount = entries.filter((entry) => entry.data.status === 'complete').length;
+
+            return (
+              <CtfWeekCard
+                label={week.label}
+                title={week.title}
+                description={week.description}
+                dayCount={entries.length}
+                completedCount={completedCount}
+                href={`/projects/${projectSlug}/weeks/${week.slug}`}
+              />
+            );
+          })}
+        </div>
+      </section>
+    )}
+
     <footer class="project-footer">
       <a href="/projects" class="back-link">← Back to projects</a>
     </footer>
@@ -47,20 +85,14 @@ const { Content } = await project.render();
     max-width: 760px;
   }
 
+  .project-writeup.has-journal {
+    max-width: none;
+  }
+
   .project-header {
     margin-bottom: calc(var(--spacing-unit) * 6);
     padding-bottom: calc(var(--spacing-unit) * 4);
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .eyebrow {
-    margin-bottom: calc(var(--spacing-unit) * 1);
-    color: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 
   .project-description {
@@ -78,6 +110,7 @@ const { Content } = await project.render();
   }
 
   .project-content {
+    max-width: 720px;
     margin-bottom: calc(var(--spacing-unit) * 8);
   }
 
@@ -86,19 +119,28 @@ const { Content } = await project.render();
     border-bottom: 1px solid var(--color-border);
   }
 
-  .project-content :global(h3) {
-    margin-top: calc(var(--spacing-unit) * 5);
+  .weeks-heading {
+    max-width: 680px;
+    margin-bottom: calc(var(--spacing-unit) * 4);
   }
 
-  .project-content :global(blockquote) {
-    margin: calc(var(--spacing-unit) * 3) 0;
-    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-accent);
+  .weeks-heading h2 {
+    margin: 0 0 calc(var(--spacing-unit) * 1.5);
+  }
+
+  .weeks-heading p {
+    margin: 0;
     color: var(--color-text-muted);
   }
 
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(var(--spacing-unit) * 2);
+  }
+
   .project-footer {
+    margin-top: calc(var(--spacing-unit) * 10);
     padding-top: calc(var(--spacing-unit) * 4);
     border-top: 1px solid var(--color-border);
   }
@@ -110,5 +152,11 @@ const { Content } = await project.render();
 
   .back-link:hover {
     color: var(--color-accent);
+  }
+
+  @media (max-width: 680px) {
+    .week-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

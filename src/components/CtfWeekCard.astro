@@ -1,0 +1,100 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+  dayCount: number;
+  completedCount: number;
+  href: string;
+}
+
+const { label, title, description, dayCount, completedCount, href } = Astro.props;
+---
+
+<article class="week-card">
+  <div class="week-card-header">
+    <span class="week-label">{label}</span>
+    <span class="week-progress">{completedCount}/{dayCount} complete</span>
+  </div>
+
+  <h2>{title}</h2>
+  <p>{description}</p>
+
+  <a href={href} class="week-link">
+    Open {label.toLowerCase()}
+    <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
+      <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" />
+    </svg>
+  </a>
+</article>
+
+<style>
+  .week-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 270px;
+    padding: calc(var(--spacing-unit) * 4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .week-card:hover {
+    border-color: var(--color-accent-dim);
+    transform: translateY(-2px);
+  }
+
+  .week-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 3);
+  }
+
+  .week-label {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .week-progress {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  h2 {
+    margin: 0 0 calc(var(--spacing-unit) * 2);
+    font-size: 1.25rem;
+  }
+
+  p {
+    flex: 1;
+    margin-bottom: calc(var(--spacing-unit) * 4);
+    color: var(--color-text-muted);
+  }
+
+  .week-link {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    width: fit-content;
+    font-size: 0.925rem;
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .week-card {
+      transition: none;
+    }
+
+    .week-card:hover {
+      transform: none;
+    }
+  }
+</style>

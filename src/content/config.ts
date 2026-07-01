@@ -36,9 +36,24 @@ const projects = defineCollection({
     status: z.enum(['planned', 'active', 'complete', 'archived']),
     lessons: z.string().optional(),
     writeup: z.boolean().default(false),
+    journal: z.string().optional(),
     order: z.number().int().default(0),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { blog, labs, projects };
+const ctfDays = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/ctf-days' }),
+  schema: z.object({
+    project: z.string(),
+    day: z.number().int().min(1).max(30),
+    week: z.number().int().min(1).max(5),
+    title: z.string(),
+    description: z.string(),
+    status: z.enum(['planned', 'in-progress', 'complete']).default('planned'),
+    date: z.coerce.date().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, labs, projects, ctfDays };
