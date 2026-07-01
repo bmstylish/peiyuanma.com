@@ -2,11 +2,13 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LabCard from '../../components/LabCard.astro';
+import TagLink from '../../components/TagLink.astro';
 
 const allLabs = await getCollection('labs');
 const labs = allLabs
   .filter((l) => !l.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allTags = [...new Set(labs.flatMap((lab) => lab.data.tags).map((tag) => tag.toLowerCase()))].sort();
 ---
 
 <BaseLayout title="Labs" description="Hands-on security labs and writeups">
@@ -15,12 +17,17 @@ const labs = allLabs
     Hands-on exercises and writeups. Click a lab to view the full report.
   </p>
 
+  <div class="tags-filter" aria-label="Lab tags">
+    <span class="filter-label">Tags:</span>
+    {allTags.map((tag) => <TagLink tag={tag} />)}
+  </div>
+
   <div class="labs-grid">
     {labs.map((lab) => (
       <LabCard
         title={lab.data.title}
         difficulty={lab.data.difficulty}
-        tools={lab.data.tools}
+        tags={lab.data.tags}
         status={lab.data.status}
         description={lab.data.description}
         href={`/labs/${lab.id}`}
@@ -40,5 +47,25 @@ const labs = allLabs
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: calc(var(--spacing-unit) * 3);
+  }
+
+  .tags-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+    padding: calc(var(--spacing-unit) * 3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .filter-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 </style>

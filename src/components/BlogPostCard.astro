@@ -1,4 +1,6 @@
 ---
+import TagLink from './TagLink.astro';
+
 interface Props {
   title: string;
   description: string;
@@ -17,16 +19,16 @@ const formattedDate = date.toLocaleDateString('en-US', {
 ---
 
 <article class="post-card">
-  <a href={`/blog/${slug}`} class="post-link">
+  <div class="post-content">
     <div class="post-header">
-      <h2>{title}</h2>
+      <h2><a href={`/blog/${slug}`}>{title}</a></h2>
       <time datetime={date.toISOString()}>{formattedDate}</time>
     </div>
     <p class="post-description">{description}</p>
     <div class="post-tags">
-      {tags.map(tag => <span class="tag">{tag}</span>)}
+      {tags.map(tag => <TagLink tag={tag} />)}
     </div>
-  </a>
+  </div>
 </article>
 
 <style>
@@ -42,10 +44,8 @@ const formattedDate = date.toLocaleDateString('en-US', {
     transform: translateY(-2px);
   }
   
-  .post-link {
-    display: block;
+  .post-content {
     padding: calc(var(--spacing-unit) * 4);
-    color: inherit;
   }
   
   .post-header {
@@ -60,6 +60,10 @@ const formattedDate = date.toLocaleDateString('en-US', {
     margin: 0;
     font-size: 1.25rem;
     color: var(--color-text-heading);
+  }
+
+  .post-header h2 a {
+    color: inherit;
   }
   
   .post-header time {

@@ -1,15 +1,17 @@
 ---
+import TagLink from './TagLink.astro';
+
 interface Props {
   title: string;
   description: string;
-  stack: string[];
+  tags: string[];
   github?: string;
   demo?: string;
-  status: 'active' | 'complete' | 'archived';
+  status: 'planned' | 'active' | 'complete' | 'archived';
   lessons?: string;
 }
 
-const { title, description, stack, github, demo, status, lessons } = Astro.props;
+const { title, description, tags, github, demo, status, lessons } = Astro.props;
 ---
 
 <article class="project-card">
@@ -20,8 +22,9 @@ const { title, description, stack, github, demo, status, lessons } = Astro.props
   
   <p class="project-description">{description}</p>
   
-  <div class="project-stack">
-    {stack.map(tech => <span class="tag">{tech}</span>)}
+  <div class="project-tags">
+    <strong>Tags:</strong>
+    {tags.map(tag => <TagLink tag={tag} />)}
   </div>
   
   {lessons && (
@@ -71,11 +74,17 @@ const { title, description, stack, github, demo, status, lessons } = Astro.props
     margin-bottom: calc(var(--spacing-unit) * 3);
   }
   
-  .project-stack {
+  .project-tags {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: calc(var(--spacing-unit) * 1);
     margin-bottom: calc(var(--spacing-unit) * 3);
+  }
+
+  .project-tags strong {
+    color: var(--color-text-heading);
+    font-size: 0.875rem;
   }
   
   .project-lessons {

@@ -1,0 +1,150 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import LabCard from '@/components/LabCard.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { tagSlug } from '@/utils/tags';
+
+export async function getStaticPaths() {
+  const [posts, labs, projects] = await Promise.all([
+    getCollection('blog'),
+    getCollection('labs'),
+    getCollection('projects'),
+  ]);
+
+  const tags = [
+    ...posts.filter((item) => !item.data.draft).flatMap((item) => item.data.tags),
+    ...labs.filter((item) => !item.data.draft).flatMap((item) => item.data.tags),
+    ...projects.filter((item) => !item.data.draft).flatMap((item) => item.data.tags),
+  ];
+
+  const tagLabels = new Map<string, string>();
+  for (const value of tags) {
+    const slug = tagSlug(value);
+    if (slug && !tagLabels.has(slug)) {
+      tagLabels.set(slug, value.trim().toLowerCase());
+    }
+  }
+
+  return [...tagLabels].map(([tag, tagLabel]) => ({
+    params: { tag },
+    props: { tagLabel },
+  }));
+}
+
+const tag = Astro.params.tag!;
+const { tagLabel } = Astro.props;
+const [allPosts, allLabs, allProjects] = await Promise.all([
+  getCollection('blog'),
+  getCollection('labs'),
+  getCollection('projects'),
+]);
+
+const matchesTag = (tags: string[]) => tags.some((value) => tagSlug(value) === tag);
+const posts = allPosts
+  .filter((item) => !item.data.draft && matchesTag(item.data.tags))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const labs = allLabs
+  .filter((item) => !item.data.draft && matchesTag(item.data.tags))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const projects = allProjects
+  .filter((item) => !item.data.draft && matchesTag(item.data.tags))
+  .sort((a, b) => a.data.order - b.data.order);
+const resultCount = posts.length + labs.length + projects.length;
+---
+
+<BaseLayout title={`${tagLabel} • Tags`} description={`Content tagged ${tagLabel}`}>
+  <header class="tag-header">
+    <p class="eyebrow">Browsing tag</p>
+    <h1>{tagLabel}</h1>
+    <p>{resultCount} {resultCount === 1 ? 'result' : 'results'} across the site.</p>
+  </header>
+
+  {posts.length > 0 && (
+    <section>
+      <h2>Blog posts</h2>
+      <div class="results-list">
+        {posts.map((post) => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            tags={post.data.tags}
+            slug={post.id}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {labs.length > 0 && (
+    <section>
+      <h2>Labs</h2>
+      <div class="results-list">
+        {labs.map((lab) => (
+          <LabCard
+            title={lab.data.title}
+            difficulty={lab.data.difficulty}
+            tags={lab.data.tags}
+            status={lab.data.status}
+            description={lab.data.description}
+            href={`/labs/${lab.id}`}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {projects.length > 0 && (
+    <section>
+      <h2>Projects</h2>
+      <div class="results-list">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            github={project.data.github}
+            demo={project.data.demo}
+            status={project.data.status}
+            lessons={project.data.lessons}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <a class="back-link" href="/">← Back home</a>
+</BaseLayout>
+
+<style>
+  .tag-header {
+    padding-bottom: calc(var(--spacing-unit) * 3);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tag-header p {
+    color: var(--color-text-muted);
+  }
+
+  .eyebrow {
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 3);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: calc(var(--spacing-unit) * 6);
+    color: var(--color-text-muted);
+  }
+</style>

@@ -48,8 +48,27 @@ collections:
       - { label: "Description", name: "description", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
       - { label: "Difficulty", name: "difficulty", widget: "select", options: ["beginner", "intermediate", "advanced"] }
-      - { label: "Tools", name: "tools", widget: "list", default: [] }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
       - { label: "Status", name: "status", widget: "select", options: ["planned", "in-progress", "complete"] }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown" }
-
+  - name: "projects"
+    label: "Projects"
+    label_singular: "Project"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    sortable_fields: ["order", "title", "status"]
+    summary: "{{order}}. {{title}} — {{status}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "GitHub URL", name: "github", widget: "string", required: false }
+      - { label: "Demo URL", name: "demo", widget: "string", required: false }
+      - { label: "Status", name: "status", widget: "select", options: ["planned", "active", "complete", "archived"], default: "planned" }
+      - { label: "Lessons", name: "lessons", widget: "text", required: false }
+      - { label: "Display Order", name: "order", widget: "number", value_type: "int", min: 0, default: 0 }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }

@@ -158,6 +158,14 @@ hr {
   margin-right: calc(var(--spacing-unit) * 1);
   margin-bottom: calc(var(--spacing-unit) * 1);
   text-transform: lowercase;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.tag:hover,
+.tag:focus-visible {
+  color: var(--color-text-heading);
+  border-color: var(--color-accent);
+  background: rgba(74, 158, 255, 0.1);
 }
 
 .badge {
@@ -187,6 +195,18 @@ hr {
   background: rgba(74, 158, 255, 0.1);
   color: var(--color-accent);
   border: 1px solid rgba(74, 158, 255, 0.2);
+}
+
+.badge.active {
+  background: rgba(212, 160, 71, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(212, 160, 71, 0.2);
+}
+
+.badge.archived {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--color-text-muted);
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 @media (max-width: 768px) {

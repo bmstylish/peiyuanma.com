@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import TagLink from '@/components/TagLink.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -45,7 +46,7 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
 
         <div class="post-tags">
           {post.data.tags.map((tag) => (
-            <span class="tag">{tag}</span>
+            <TagLink tag={tag} />
           ))}
         </div>
       </div>

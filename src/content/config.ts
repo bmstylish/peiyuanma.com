@@ -19,10 +19,25 @@ const labs = defineCollection({
     description: z.string(),
     date: z.date(),
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
-    tools: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
     status: z.enum(['planned', 'in-progress', 'complete']),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { blog, labs };
+const projects = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    tags: z.array(z.string()).default([]),
+    github: z.union([z.string().url(), z.literal('')]).optional(),
+    demo: z.union([z.string().url(), z.literal('')]).optional(),
+    status: z.enum(['planned', 'active', 'complete', 'archived']),
+    lessons: z.string().optional(),
+    order: z.number().int().default(0),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, labs, projects };

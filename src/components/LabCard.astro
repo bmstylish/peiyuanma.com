@@ -1,14 +1,16 @@
 ---
+import TagLink from './TagLink.astro';
+
 interface Props {
   title: string;
   difficulty: "beginner" | "intermediate" | "advanced";
-  tools: string[];
+  tags: string[];
   status: "complete" | "in-progress" | "planned";
   description: string;
   href?: string; // if provided, card becomes clickable
 }
 
-const { title, difficulty, objective, tools, status, description, href } = Astro.props;
+const { title, difficulty, objective, tags, status, description, href } = Astro.props;
 
 const difficultyColors: Record<Props["difficulty"], string> = {
   beginner: "var(--color-success)",
@@ -22,49 +24,30 @@ function statusClass(s: Props["status"]) {
 }
 ---
 
-{href ? (
-  <a class="lab-card lab-card-link" href={href}>
-    <div class="lab-header">
-      <h3>{title}</h3>
-      <div class="lab-meta">
-        <span class="difficulty" style={`color:${difficultyColors[difficulty]}`}>
-          {difficulty}
-        </span>
-        <span class:list={["badge", statusClass(status)]}>{status}</span>
-      </div>
+<article class:list={["lab-card", { "lab-card-link": href }]}>
+  <div class="lab-header">
+    <h3>{href ? <a href={href}>{title}</a> : title}</h3>
+    <div class="lab-meta">
+      <span class="difficulty" style={`color:${difficultyColors[difficulty]}`}>
+        {difficulty}
+      </span>
+      <span class:list={["badge", statusClass(status)]}>{status}</span>
     </div>
+  </div>
 
-    <p class="lab-description">{description}</p>
-
-    <div class="lab-tools">
-      <strong>Tools:</strong>
-      {tools.map((tool) => <span class="tag">{tool}</span>)}
-    </div>
-  </a>
-) : (
-  <article class="lab-card">
-    <div class="lab-header">
-      <h3>{title}</h3>
-      <div class="lab-meta">
-        <span class="difficulty" style={`color:${difficultyColors[difficulty]}`}>
-          {difficulty}
-        </span>
-        <span class:list={["badge", statusClass(status)]}>{status}</span>
-      </div>
-    </div>
-
+  {!href && objective && (
     <div class="lab-objective">
       <strong>Objective:</strong> {objective}
     </div>
+  )}
 
-    <p class="lab-description">{description}</p>
+  <p class="lab-description">{description}</p>
 
-    <div class="lab-tools">
-      <strong>Tools:</strong>
-      {tools.map((tool) => <span class="tag">{tool}</span>)}
-    </div>
-  </article>
-)}
+  <div class="lab-tags">
+    <strong>Tags:</strong>
+    {tags.map((tag) => <TagLink tag={tag} />)}
+  </div>
+</article>
 
 <style>
   .lab-card {
@@ -98,6 +81,10 @@ function statusClass(s: Props["status"]) {
     color: var(--color-text-heading);
   }
 
+  .lab-header h3 a {
+    color: inherit;
+  }
+
   .lab-meta {
     display: flex;
     align-items: center;
@@ -126,7 +113,7 @@ function statusClass(s: Props["status"]) {
     margin: 0;
   }
 
-  .lab-tools {
+  .lab-tags {
     font-size: 0.875rem;
     color: var(--color-text-muted);
     display: flex;
@@ -135,7 +122,7 @@ function statusClass(s: Props["status"]) {
     align-items: center;
   }
 
-  .lab-tools strong {
+  .lab-tags strong {
     color: var(--color-text-heading);
   }
 </style>
