@@ -35,6 +35,7 @@ const projects = defineCollection({
     demo: z.union([z.string().url(), z.literal('')]).optional(),
     status: z.enum(['planned', 'active', 'complete', 'archived']),
     lessons: z.string().optional(),
+    writeup: z.boolean().default(false),
     order: z.number().int().default(0),
     draft: z.boolean().default(false),
   }),

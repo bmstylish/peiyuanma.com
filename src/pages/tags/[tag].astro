@@ -107,6 +107,7 @@ const resultCount = posts.length + labs.length + projects.length;
             tags={project.data.tags}
             github={project.data.github}
             demo={project.data.demo}
+            href={project.data.writeup ? `/projects/${project.id.replace(/\.md$/, '')}` : undefined}
             status={project.data.status}
             lessons={project.data.lessons}
           />

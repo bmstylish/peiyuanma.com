@@ -70,5 +70,7 @@ collections:
       - { label: "Demo URL", name: "demo", widget: "string", required: false }
       - { label: "Status", name: "status", widget: "select", options: ["planned", "active", "complete", "archived"], default: "planned" }
       - { label: "Lessons", name: "lessons", widget: "text", required: false }
+      - { label: "Project Write-up", name: "writeup", widget: "boolean", default: false }
       - { label: "Display Order", name: "order", widget: "number", value_type: "int", min: 0, default: 0 }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }

@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TagLink from '@/components/TagLink.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects
+    .filter((project) => !project.data.draft && project.data.writeup)
+    .map((project) => ({
+      params: { slug: project.id.replace(/\.md$/, '') },
+      props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<BaseLayout title={`${project.data.title} • Projects`} description={project.data.description}>
+  <article class="project-writeup">
+    <header class="project-header">
+      <div class="project-heading">
+        <p class="eyebrow">Project source</p>
+        <h1>{project.data.title}</h1>
+        <p class="project-description">{project.data.description}</p>
+      </div>
+
+      <div class="project-meta">
+        <span class:list={['badge', project.data.status]}>{project.data.status}</span>
+        {project.data.tags.map((tag) => <TagLink tag={tag} />)}
+      </div>
+    </header>
+
+    <div class="project-content">
+      <Content />
+    </div>
+
+    <footer class="project-footer">
+      <a href="/projects" class="back-link">← Back to projects</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-writeup {
+    max-width: 760px;
+  }
+
+  .project-header {
+    margin-bottom: calc(var(--spacing-unit) * 6);
+    padding-bottom: calc(var(--spacing-unit) * 4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .eyebrow {
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .project-description {
+    max-width: 680px;
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    margin-top: calc(var(--spacing-unit) * 3);
+  }
+
+  .project-content {
+    margin-bottom: calc(var(--spacing-unit) * 8);
+  }
+
+  .project-content :global(h2) {
+    padding-bottom: calc(var(--spacing-unit) * 1.5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .project-content :global(h3) {
+    margin-top: calc(var(--spacing-unit) * 5);
+  }
+
+  .project-content :global(blockquote) {
+    margin: calc(var(--spacing-unit) * 3) 0;
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    color: var(--color-text-muted);
+  }
+
+  .project-footer {
+    padding-top: calc(var(--spacing-unit) * 4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+</style>

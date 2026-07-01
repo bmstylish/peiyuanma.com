@@ -7,11 +7,12 @@ interface Props {
   tags: string[];
   github?: string;
   demo?: string;
+  href?: string;
   status: 'planned' | 'active' | 'complete' | 'archived';
   lessons?: string;
 }
 
-const { title, description, tags, github, demo, status, lessons } = Astro.props;
+const { title, description, tags, github, demo, href, status, lessons } = Astro.props;
 ---
 
 <article class="project-card">
@@ -34,9 +35,14 @@ const { title, description, tags, github, demo, status, lessons } = Astro.props;
   )}
   
   <div class="project-links">
+    {href && (
+      <a href={href} class="project-link">
+        View Source →
+      </a>
+    )}
     {github && (
       <a href={github} target="_blank" rel="noopener" class="project-link">
-        View Source →
+        GitHub →
       </a>
     )}
     {demo && (
