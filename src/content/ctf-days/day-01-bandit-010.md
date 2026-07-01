@@ -7,7 +7,7 @@ description: Complete OverTheWire Bandit levels 0–10, then solve picoCTF Gener
   Skills challenges until time expires.
 status: complete
 date: 2026-07-01
-draft: true
+draft: false
 ---
 ## Challenges completed
 
@@ -45,6 +45,22 @@ Level 6: retrieving plain-text password from a file that is
 
 `find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` :: Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3
 
+Level 7: retrieving plain-text password from data.txt next to the word millionth
+
+grep "millionth" data.txt :: VR1ljMayciFxbnUokuQmJFw6QC9VKtub
+
+Level 8: retrieving plain-text password from data.txt of the line that only occurs once
+
+`sort data.txt | uniq -u` :: EjmOSvuAu7sGAHqHVcBDPirRe9T03kxl
+
+Level 9:  retrieving plain-text password from data.txt where its human readable strings, preceded by "="
+
+`strings data.txt | grep "="` :: B0s2khmbT9u0geKuOoVGW3JZKhndE3BG
+
+Level 10: retrieving password from data.txt that is encoded in base64
+
+`base64 -d data.txt` :: pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro
+
 ## What I learned
 
 *Document the main concepts from this session.*
@@ -57,6 +73,8 @@ Level 6: retrieving plain-text password from a file that is
 
 `file ./*` - inspects all file and see what type of data they contain
 
+`|` - Pipe, passes output of left to the command on the right 
+
 `-type f` - restricts the search to regular files 
 
 `-size 1033c` - matches files for 1033 (c for bytes)
@@ -68,6 +86,12 @@ Level 6: retrieving plain-text password from a file that is
 `-group bandit6` - matching to group bandit6
 
 `2>/dev/null` - hides permission denied from errors 
+
+`sort` - groups all identical lines together 
+
+`uniq -u` - filter out all repeated lines only leaving unique 
+
+`strings` - only extracts strings of human readable text that are 4 char or longer
 
 ## Problems and dead ends
 
