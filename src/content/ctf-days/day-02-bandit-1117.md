@@ -5,9 +5,9 @@ week: 1
 title: Bandit 11–17
 description: Complete Bandit levels 11–17 and solve two or three picoCTF General
   Skills challenges.
-status: in-progress
+status: complete
 date: 2026-07-02
-draft: true
+draft: false
 ---
 ## Challenges completed
 
@@ -39,13 +39,23 @@ Level 14: The password for the next level can be retrieved by submitting the pas
 
 `nc localhost 30000` :: pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7
 
-level 15: The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+Level 15: The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
 
-`nc -ssl localhost 30001` :: kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V
+`nc --ssl localhost 30001` :: kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V
 
-level 16:
+Level 16: The password of the current level toa port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t
+
+`nmap -sV -p 31000-32000 localhost && ncat --ssl localhost <port>`
+
+Level 17: There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
+
+`diff passwords.old passwords.new` :: OQxXZjELndr90zuhOTDYBEomI0SZITXI
 
 ## What I learned
+
+*Document the main concepts from this session.*
+
+## Commands, tools, and techniques
 
 `tr 'A-Za-z' 'N-ZA-Mn-za-m'` - Selecting all characters, mapping A-M to N-Z and the same for lowercase
 
@@ -63,14 +73,14 @@ level 16:
 
 `nc` - can be used for port scanning, file transfers, network debugging, or chat and connectivity through p2p
 
-## Commands, tools, and techniques
-
-*Record useful commands, payloads, filters, or problem-solving techniques.*
+`nmap -sV -p 31000-32000 `- network scanning tool, -sV is a service scan, -p specifies the ports scanned 
 
 ## Problems and dead ends
 
-*Explain what did not work and why.*
+Having some trouble with when to use nc and ncat when working with the SSL connections, as sometimes nc would not be able to resolve --ssl
 
 ## What I will revisit
 
-*List anything that needs more practice or a second attempt.*
+* nmap
+* nc vs ncat 
+* hex dumps
