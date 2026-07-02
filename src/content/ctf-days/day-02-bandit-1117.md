@@ -13,7 +13,14 @@ draft: false
 
 Level 11: retrieve password form data.txt where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions
 
-`cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'` :: GROozWPO8QyN0mGrjUkID0WCYkZiQxrN
+`cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'` ::
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`GROozWPO8QyN0mGrjUkID0WCYkZiQxrN`
+
+</details>
 
 Level 12: retrieve password from data.txt, which is a hex dump of a file that has been repeatedly compressed
 
@@ -27,7 +34,12 @@ Level 12: retrieve password from data.txt, which is a hex dump of a file that ha
 
 `file pswd`
 
-qQYQiHOBPR8zR61qxYqX45quvihF2uzk
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`qQYQiHOBPR8zR61qxYqX45quvihF2uzk`
+
+</details>
 
 Level 13: For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level.
 
@@ -35,21 +47,51 @@ From my own computer: `scp -P 2220 bandit13@bandit.labs.overthewire.org /home/ba
 
 Then load the private key into ~/.ssh
 
-Level 14: The password for the next level can be retrieved by submitting the password of the current level (aaWecNkG4FhxJQxz07uiwzVP6bJiYS65) to port 30000 on localhost
+Level 14: The password for the next level can be retrieved by submitting the password of the current level 
 
-`nc localhost 30000` :: pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
 
-Level 15: The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+`aaWecNkG4FhxJQxz07uiwzVP6bJiYS65`
 
-`nc --ssl localhost 30001` :: kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V
+</details>
+
+to port 30000 on localhost
+
+`nc localhost 30000` ::
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7`
+
+</details>
+
+Level 15: The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+
+`nc --ssl localhost 30001` ::
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V`
+
+</details>
 
 Level 16: The password of the current level toa port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t
 
 `nmap -sV -p 31000-32000 localhost && ncat --ssl localhost <port>`
 
-Level 17: There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
+Level 17: There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
 
-`diff passwords.old passwords.new` :: OQxXZjELndr90zuhOTDYBEomI0SZITXI
+`diff passwords.old passwords.new` ::
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`OQxXZjELndr90zuhOTDYBEomI0SZITXI`
+
+</details>
 
 ## What I learned
 
