@@ -15,19 +15,47 @@ Level 0: simply logging into the game using SSH using the credentials provided
 
 Level 1: retrieving plain-text password from readme
 
-`cat readme` :: 6y2kwnwK6grgvwvpvLaa2T1cpFEKOhNR
+`cat readme` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`6y2kwnwK6grgvwvpvLaa2T1cpFEKOhNR`
+
+</details>
 
 Level 2: retrieving plain-text password from file named "-" 
 
-`cat ./-`:: PK8fYLZg2hnHSz83plBL1iEPKdD3QToB
+`cat ./-` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`PK8fYLZg2hnHSz83plBL1iEPKdD3QToB`
+
+</details>
 
 Level 3: retrieving plain-text password from file named "--spaces\ in\ this\filename--" 
 
-`cat ./--spaces\ in\ this\ filename--` :: 7ZZ2LFrykP2zEyvBl4m3clcL7tGYJPME
+`cat ./--spaces\ in\ this\ filename--` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`7ZZ2LFrykP2zEyvBl4m3clcL7tGYJPME`
+
+</details>
 
 Level 4: retrieving plain-text password from only human-readable file 
 
-`file ./* | grep "text"` :: 6C7h9GD8M6ai5nr7wo1RonrzFjj9yIrG
+`file ./* | grep "text"` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`6C7h9GD8M6ai5nr7wo1RonrzFjj9yIrG`
+
+</details>
 
 Level 5: retrieving plain-text password from a file that is
 
@@ -35,7 +63,14 @@ Level 5: retrieving plain-text password from a file that is
 * 1033 bytes in size 
 * not executable 
 
-`find . -type f -size 1033c ! -executable` :: pXa26xhMWaC2SvDotA4r9EgZkulOeSBW
+`find . -type f -size 1033c ! -executable` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`pXa26xhMWaC2SvDotA4r9EgZkulOeSBW`
+
+</details>
 
 Level 6: retrieving plain-text password from a file that is
 
@@ -43,23 +78,58 @@ Level 6: retrieving plain-text password from a file that is
 * owned by group bandit6 
 * 33 bytes in size
 
-`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` :: Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3
+`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` 
 
-Level 7: retrieving plain-text password from data.txt next to the word millionth
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
 
-grep "millionth" data.txt :: VR1ljMayciFxbnUokuQmJFw6QC9VKtub
+`Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3`
 
-Level 8: retrieving plain-text password from data.txt of the line that only occurs once
+</details>
 
-`sort data.txt | uniq -u` :: EjmOSvuAu7sGAHqHVcBDPirRe9T03kxl
+Level 7: retrieving plain-text password from data.txt next to the word millionth
 
-Level 9:  retrieving plain-text password from data.txt where its human readable strings, preceded by "="
+grep "millionth" data.txt 
 
-`strings data.txt | grep "="` :: B0s2khmbT9u0geKuOoVGW3JZKhndE3BG
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`VR1ljMayciFxbnUokuQmJFw6QC9VKtub`
+
+</details>
+
+Level 8: retrieving plain-text password from data.txt of the line that only occurs once
+
+`sort data.txt | uniq -u` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`EjmOSvuAu7sGAHqHVcBDPirRe9T03kxl`
+
+</details>
+
+Level 9:  retrieving plain-text password from data.txt where its human readable strings, preceded by "="
+
+`strings data.txt | grep "="` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`B0s2khmbT9u0geKuOoVGW3JZKhndE3BG`
+
+</details>
 
 Level 10: retrieving password from data.txt that is encoded in base64
 
-`base64 -d data.txt` :: pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro
+`base64 -d data.txt` 
+
+<details>
+<summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
+`pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro`
+
+</details>
 
 ## What I learned
 
