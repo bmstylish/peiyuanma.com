@@ -13,7 +13,7 @@ draft: false
 
 Level 11: retrieve password form data.txt where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions
 
-`cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'` ::
+`cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'`
 
 <details>
 <summary><code>••••••••••••••••••••••••••••••••</code></summary>
@@ -58,7 +58,7 @@ Level 14: The password for the next level can be retrieved by submitting the pas
 
 to port 30000 on localhost
 
-`nc localhost 30000` ::
+`nc localhost 30000`
 
 <details>
 <summary><code>••••••••••••••••••••••••••••••••</code></summary>
@@ -69,7 +69,7 @@ to port 30000 on localhost
 
 Level 15: The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
 
-`nc --ssl localhost 30001` ::
+`nc --ssl localhost 30001` 
 
 <details>
 <summary><code>••••••••••••••••••••••••••••••••</code></summary>
@@ -84,7 +84,7 @@ Level 16: The password of the current level toa port on localhost in the range 3
 
 Level 17: There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
 
-`diff passwords.old passwords.new` ::
+`diff passwords.old passwords.new` 
 
 <details>
 <summary><code>••••••••••••••••••••••••••••••••</code></summary>
@@ -115,7 +115,7 @@ Level 17: There are 2 files in the homedirectory: passwords.old and passwords.ne
 
 `nc` - can be used for port scanning, file transfers, network debugging, or chat and connectivity through p2p
 
-`nmap -sV -p 31000-32000 `- network scanning tool, -sV is a service scan, -p specifies the ports scanned 
+`nmap -sV -p 31000-32000`- network scanning tool, -sV is a service scan, -p specifies the ports scanned 
 
 ## Problems and dead ends
 
