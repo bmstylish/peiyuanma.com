@@ -19,6 +19,8 @@ Level 18: The password for the next level is stored in a file readme in the home
 
 KpsOfPkcP7i1FlIExk2QEjyt6dw8dxZI
 
+</details>
+
 Level 19: To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary
 
 `./bandit20-do cat /etc/bandit_pass/bandit20`
@@ -29,6 +31,8 @@ where bandit20-do is a setuid ELF executable that was provided in the homedirect
 
 4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA
 
+</details>
+
 Level 20: There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a command line argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21)
 
 `echo "password" | nc -lvnp 53921 &`
@@ -38,6 +42,8 @@ Level 20: There is a setuid binary in the homedirectory that does the following:
 <details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
 
 bW9kBv5WC3P4yoDyf12LSdGuNz5ka6hY
+
+</details>
 
 Level 21: A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed
 
@@ -54,6 +60,8 @@ showed us that this cronjob was copying the password of bandit22 into a public r
 <details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
 
 RYVux2rHEm9tiXHmLFzuR7Vhx6AZQMEz
+
+</details>
 
 Level 22: A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed
 
@@ -75,6 +83,8 @@ that is run every minute that is copying the password of bandit23 into a folder 
 
 gKXDTAXnIz3OBxiPjRZ2uqutUlPZrBsw
 
+</details>
+
 Level 23: A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
 
 Repeating the same process as level 22 reveals this script that runs every minute: 
@@ -93,23 +103,23 @@ Repeating the same process as level 22 reveals this script that runs every minut
 
 `do`
 
-`    if [ "$i" != "." ] && [ "$i" != ".." ];`
+`if [ "$i" != "." ] && [ "$i" != ".." ];`
 
-`    then`
+`then`
 
-`        echo "Handling $i"`
+`echo "Handling $i"`
 
-`        owner="$(stat --format "%U" "./$i")"`
+`owner="$(stat --format "%U" "./$i")"`
 
-`        if [ "${owner}" = "bandit23" ] && [ -f "$i" ]; then`
+`if [ "${owner}" = "bandit23" ] && [ -f "$i" ]; then`
 
-`            timeout -s 9 60 "./$i"`
+`timeout -s 9 60 "./$i"`
 
-`        fi`
+`fi`
 
-`        rm -rf "./$i"`
+`rm -rf "./$i"`
 
-`    fi`
+`fi`
 
 Which executes all scripts owned by bandit23 in the folder /var/spool/bandit24/foo 
 
@@ -129,6 +139,8 @@ and giving the right permission to run it:
 
 hVQMk3lJNsmQ7VF3ubyrNNBom7BOgVXv
 
+</details>
+
 Level 24: A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing. You do not need to create new connections each time
 
 Script used as we do not have to create new connections each time: 
@@ -144,6 +156,8 @@ Then grepped output.log with:
 <details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
 
 SoHfqMOEqIX2IYKVciZxvgpR9a2Djx4P
+
+</details>
 
 ## What I learned
 
