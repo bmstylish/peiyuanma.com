@@ -6,7 +6,7 @@ title: SSH keys, Git, and networking
 description: Complete Bandit levels 25–29, focusing on SSH keys, Git, and networking.
 status: complete
 date: 2026-07-04
-draft: true
+draft: false
 ---
 ## Challenges completed
 
@@ -38,13 +38,21 @@ Level 26: contains bandit27-do, used
 
 to obtain password
 
+<details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
 STJLJBRRphMxKB392CT4iOr5CbzPU9ER
+
+</details>
 
 Level 27: There is a git repository at `ssh://bandit27-git@bandit.labs.overthewire.org/home/bandit27-git/repo` via the port `2220`. The password for the user `bandit27-git` is the same as for the user `bandit27`
 
 `git pull ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo`
 
+<details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
 y8Yd2ssKcpHpud7UvOSOxwamRMzIGIeQ
+
+</details>
 
 Level 28: There is a git repository at `ssh://bandit28-git@bandit.labs.overthewire.org/home/bandit28-git/repo` via the port `2220`. The password for the user `bandit28-git` is the same as for the user `bandit28`
 
@@ -52,7 +60,11 @@ The same process as bandit27, however, the passwords are redacted, we can access
 
 `git log -p README.md`
 
+<details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
 Em7eGtqaMySwNFjCpwzzHhLhospOcdt0
+
+</details>
 
 Level 29: There is a git repository at `ssh://bandit29-git@bandit.labs.overthewire.org/home/bandit29-git/repo` via the port `2220`. The password for the user `bandit29-git` is the same as for the user `bandit29`
 
@@ -62,7 +74,11 @@ Level 29: There is a git repository at `ssh://bandit29-git@bandit.labs.overthew
 
 `git checkout dev`
 
+<details><summary><code>••••••••••••••••••••••••••••••••</code></summary>
+
 jq9Dfg2rXsfYsWMgFuKlXhphjdH7USgX
+
+</details>
 
 ## What I learned
 
