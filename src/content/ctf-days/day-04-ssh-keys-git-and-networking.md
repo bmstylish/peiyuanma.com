@@ -42,7 +42,27 @@ STJLJBRRphMxKB392CT4iOr5CbzPU9ER
 
 Level 27: There is a git repository at `ssh://bandit27-git@bandit.labs.overthewire.org/home/bandit27-git/repo` via the port `2220`. The password for the user `bandit27-git` is the same as for the user `bandit27`
 
+`git pull ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo`
+
 y8Yd2ssKcpHpud7UvOSOxwamRMzIGIeQ
+
+Level 28: There is a git repository at `ssh://bandit28-git@bandit.labs.overthewire.org/home/bandit28-git/repo` via the port `2220`. The password for the user `bandit28-git` is the same as for the user `bandit28`
+
+The same process as bandit27, however, the passwords are redacted, we can access the log to access the password using:
+
+`git log -p README.md`
+
+Em7eGtqaMySwNFjCpwzzHhLhospOcdt0
+
+Level 29: There is a git repository at `ssh://bandit29-git@bandit.labs.overthewire.org/home/bandit29-git/repo` via the port `2220`. The password for the user `bandit29-git` is the same as for the user `bandit29`
+
+`git clone ssh://bandit29-git@bandit.labs.overthewire.org:2220/home/bandit29-git/repo`
+
+`git branch -a`
+
+`git checkout dev`
+
+jq9Dfg2rXsfYsWMgFuKlXhphjdH7USgX
 
 ## What I learned
 
@@ -50,12 +70,14 @@ y8Yd2ssKcpHpud7UvOSOxwamRMzIGIeQ
 
 ## Commands, tools, and techniques
 
-*Record useful commands, payloads, filters, or problem-solving techniques.*
+* `git log -p` - forces line by line different from patches with -p flag
+* `git branch -a` - lists all branches with the -a flag
+* `git checkout dev` - switches active terminal workspace to branch dev
 
 ## Problems and dead ends
 
-*Explain what did not work and why.*
+I used git pull for bandit 27 and 28, it worked out fine. However, I could find the flag for bandit 29 using git pull as it was hidden in different branches, git pull only combines git fetch and merge, so it does not know other branches exist, which lead to git branch -a coming up as empty
 
 ## What I will revisit
 
-*List anything that needs more practice or a second attempt.*
+* git
