@@ -1,29 +1,44 @@
 ---
-project: "ctf-winter-break-2026"
+project: ctf-winter-break-2026
 day: 8
 week: 2
-title: "SQL injection"
-description: "Complete TryHackMe SQL Injection Introduction and two PortSwigger SQL injection labs."
-status: "planned"
+title: SQL injection
+description: Complete TryHackMe SQL Injection Introduction and two PortSwigger
+  SQL injection labs.
+status: complete
+date: 2026-07-08
 draft: false
 ---
-
 ## Challenges completed
 
-_Add completed levels, labs, flags, or rooms here._
+THM SQL injection room
 
 ## What I learned
 
-_Document the main concepts from this session._
+* Different types of SQL injection 
+
+  * In-Band
+
+    * Error based 
+    * Union Based
+  * Blind
+
+    * Authentication
+    * Boolean 
+    * Timed
+  * Out of Band SQL Injection
+* Detecting when SQL Injection is possible 
+* Remediation and Prevention tactics 
 
 ## Commands, tools, and techniques
 
-_Record useful commands, payloads, filters, or problem-solving techniques._
+* *`' OR 1=1; --` -* Authentication bypass 
+* *`0 UNION SELECT 1,2,3` -* for finding columns of tables
 
 ## Problems and dead ends
 
-_Explain what did not work and why._
+*Explain what did not work and why.*
 
 ## What I will revisit
 
-_List anything that needs more practice or a second attempt._
+* More hands on practise with SQL injections with PortSwigger
