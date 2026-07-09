@@ -1,29 +1,39 @@
 ---
-project: "ctf-winter-break-2026"
+project: ctf-winter-break-2026
 day: 9
 week: 2
-title: "XSS and CSRF"
-description: "Complete TryHackMe XSS Introduction and CSRF Introduction, plus one corresponding lab."
-status: "planned"
+title: XSS and CSRF
+description: Complete TryHackMe XSS Introduction and CSRF Introduction, plus one
+  corresponding lab.
+status: complete
+date: 2026-07-09
 draft: false
 ---
-
 ## Challenges completed
 
-_Add completed levels, labs, flags, or rooms here._
+Completed THM rooms Protocols, Protocols 2, and XSS 
 
 ## What I learned
 
-_Document the main concepts from this session._
+* Refreshed knowledge around FTP, HTTP, FTP, SMTP, POP3, IMAP, TLS, SSH 
+* Refreshed knowledge around sniffing, MITM, and passwords attacks
+* Refreshed knowledge around XSS, including different types of XSS:
+
+  * Reflected XSS 
+  * Stored XSS 
+  * Dom-Based XSS 
+  * Blind XSS 
 
 ## Commands, tools, and techniques
 
-_Record useful commands, payloads, filters, or problem-solving techniques._
+* THC Hydra
+* Bettercap 
+* Ettercap 
 
 ## Problems and dead ends
 
-_Explain what did not work and why._
+*Explain what did not work and why.*
 
 ## What I will revisit
 
-_List anything that needs more practice or a second attempt._
+CSRF Rooms
