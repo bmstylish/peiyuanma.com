@@ -2,9 +2,8 @@
 project: ctf-winter-break-2026
 day: 9
 week: 2
-title: XSS and CSRF
-description: Complete TryHackMe XSS Introduction and CSRF Introduction, plus one
-  corresponding lab.
+title: "XSS and Protocols "
+description: Complete TryHackMe XSS Introduction and Network Protocols.
 status: complete
 date: 2026-07-09
 draft: false
@@ -36,4 +35,4 @@ Completed THM rooms Protocols, Protocols 2, and XSS
 
 ## What I will revisit
 
-CSRF Rooms
+XSS Labs
