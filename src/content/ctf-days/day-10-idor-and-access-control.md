@@ -19,6 +19,13 @@ Completed THM rooms IDOR and CSRF
 
   * Common spots for CSRF
 * How to find CSRF vulnerabilities 
+* What an IDOR is 
+* Where IDOR can be located 
+* Finding IDORs in 
+
+  * Hashed IDs 
+  * Encoded IDs 
+  * Unpredictable IDs
 
 ## Commands, tools, and techniques
 
@@ -30,4 +37,4 @@ The biggest problem that I'm running into is how THM labs are really slow when y
 
 ## What I will revisit
 
-* More hands on CSRF
+* More hands practise with IDOR and CSRF
