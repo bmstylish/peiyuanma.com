@@ -1,29 +1,44 @@
 ---
-project: "ctf-winter-break-2026"
+project: ctf-winter-break-2026
 day: 13
 week: 2
-title: "Server-side attacks"
-description: "Study command injection, SSRF, or API pentesting and complete two related labs."
-status: "planned"
-draft: false
+title: "nmap advanced "
+description: Complete nmap port scan advanced and post port scans
+status: complete
+date: 2026-07-13
+draft: true
 ---
-
 ## Challenges completed
 
-_Add completed levels, labs, flags, or rooms here._
+Complete THM nmap port scan advanced and post port scans
 
 ## What I learned
 
-_Document the main concepts from this session._
+* TCP Null Scan, FIN scan, Xmas Scan 
+* TCP Maimon Scan 
+* TCP ACK, Window and Custom Scan 
+* Spoofing and decoys 
+* Fragmented Packets 
+* Idle/Zombie scan 
 
 ## Commands, tools, and techniques
 
-_Record useful commands, payloads, filters, or problem-solving techniques._
+* Null scan: nmap -sN
+* FIN scan: nmap -sF
+* Xmas scan: nmap -sX
+* ACK scan: nmap -sA
+* Maimon scan: nmap -sA
+* Window scan: nmap -sW
+* Custom TCP scan: nmap --scanflags
+* Deocy Scan: nmap -D decoyIP,decoyIP,ME target_IP
+* Idle scan: nmap -sl 
+* for mac spoofing: --spoof-mac 
+* for detailed reasons and conclusions: --reason 
 
 ## Problems and dead ends
 
-_Explain what did not work and why._
+*Explain what did not work and why.*
 
 ## What I will revisit
 
-_List anything that needs more practice or a second attempt._
+*List anything that needs more practice or a second attempt.*
