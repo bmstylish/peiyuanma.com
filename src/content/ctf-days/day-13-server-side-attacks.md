@@ -6,7 +6,7 @@ title: "nmap advanced "
 description: Complete nmap port scan advanced and post port scans
 status: complete
 date: 2026-07-13
-draft: true
+draft: false
 ---
 ## Challenges completed
 
@@ -20,6 +20,10 @@ Complete THM nmap port scan advanced and post port scans
 * Spoofing and decoys 
 * Fragmented Packets 
 * Idle/Zombie scan 
+* Service Detection 
+* OS Detection and Traceroute 
+* Saving outputs
+* nmap scripting engine 
 
 ## Commands, tools, and techniques
 
@@ -32,8 +36,12 @@ Complete THM nmap port scan advanced and post port scans
 * Custom TCP scan: nmap --scanflags
 * Deocy Scan: nmap -D decoyIP,decoyIP,ME target_IP
 * Idle scan: nmap -sl 
+* Service scan: nmap -sv 
+* OS detection: nmap -O
 * for mac spoofing: --spoof-mac 
 * for detailed reasons and conclusions: --reason 
+* nmap scripts to run: --script 
+* traceroute to the target: --traceroute 
 
 ## Problems and dead ends
 
