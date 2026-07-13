@@ -16,7 +16,7 @@ backend:
   repo: bmstylish/peiyuanma.com
   branch: main
   base_url: https://decap-auth.peiyuanma.com
-  auth_endpoint: auth?provider=github
+  auth_endpoint: auth
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
