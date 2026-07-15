@@ -2,7 +2,7 @@
 project: ctf-winter-break-2026
 day: 14
 week: 2
-title: Timed web set
+title: " Walking an Application"
 description: Complete THM Walking an application room
 status: complete
 date: 2026-07-14
