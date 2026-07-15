@@ -1,29 +1,35 @@
 ---
-project: "ctf-winter-break-2026"
+project: ctf-winter-break-2026
 day: 14
 week: 2
-title: "Timed web set"
-description: "Attempt five unseen picoCTF web challenges and write three web solutions."
-status: "planned"
+title: Timed web set
+description: Complete THM Walking an application room
+status: complete
+date: 2026-07-14
 draft: false
 ---
-
 ## Challenges completed
 
-_Add completed levels, labs, flags, or rooms here._
+Completed THM walking an application room 
 
 ## What I learned
 
-_Document the main concepts from this session._
+* Learnt how to use my browser to view human-readable source code of a website
+* Using inspect element and making changes to view what might be normally blocked using tools in dev tools such as 
+
+  * Debugger 
+  * Inspector 
+  * Network 
+  * Storage
 
 ## Commands, tools, and techniques
 
-_Record useful commands, payloads, filters, or problem-solving techniques._
+*Record useful commands, payloads, filters, or problem-solving techniques.*
 
 ## Problems and dead ends
 
-_Explain what did not work and why._
+*Explain what did not work and why.*
 
 ## What I will revisit
 
-_List anything that needs more practice or a second attempt._
+* Web based CTFs from picoctf
