@@ -1,29 +1,50 @@
 ---
-project: "ctf-winter-break-2026"
+project: ctf-winter-break-2026
 day: 16
 week: 3
-title: "Hashes and introductory RSA"
-description: "Solve four crypto challenges covering hashes, modular arithmetic, or basic RSA."
-status: "planned"
+title: Webstacks
+description: "Walkthrough of vulnerabilities of MERN, React/Next, Django and LAMP "
+status: complete
+date: 2026-07-16
 draft: false
 ---
-
 ## Challenges completed
 
-_Add completed levels, labs, flags, or rooms here._
+Walk through of the following 4 CVEs on vulnerably machines in THM rooms:
+
+* MERN / Express CVE-2020-8203 
+
+  * Prototype pollution → auth bypass 
+
+    * 7.4 High
+* Next.js Middleware CVE-2025-29927
+
+  * Single header → full middleware bypass 
+
+    * 9.1 Critical
+* Django ORM CVE-2021-35042 
+
+  * SQL injection via unparameterised `ORDER BY `
+
+    * 9.8 Critical
+* Apache LAMP CVE-2021-41773
+
+  * Path traversal + `mod_cgi` RCE
+
+    * 9.8 Critical
 
 ## What I learned
 
-_Document the main concepts from this session._
+Identify the technology stack and confirm evidence before exploiting, so attacks are targeted rather than based on guessing or noisy automated scans.
 
 ## Commands, tools, and techniques
 
-_Record useful commands, payloads, filters, or problem-solving techniques._
+* Nikito 
 
 ## Problems and dead ends
 
-_Explain what did not work and why._
+*Explain what did not work and why.*
 
 ## What I will revisit
 
-_List anything that needs more practice or a second attempt._
+*List anything that needs more practice or a second attempt.*
