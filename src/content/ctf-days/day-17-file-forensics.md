@@ -12,7 +12,7 @@ draft: false
 
 Completed THM rooms Web Server Attacks I, II 
 
-Walk through on different types of web servers such as Python, Apache2, Node.js (Express), Nginx on how to identify and utilize flaws in misconfiguration in these webservers.
+Walk through on different types of web servers such as Python, Apache2, Node.js (Express), Nginx and IIS on how to identify and utilize flaws in misconfiguration in these webservers.
 
 ## What I learned
 
@@ -23,6 +23,17 @@ Walk through on different types of web servers such as Python, Apache2, Node.js 
 * Nginx can expose similar information through `autoindex` and `stub_status`.
 * Important security headers are often missing unless they are configured manually.
 * A quick `curl -sI` check is an effective way to review headers during a web server assessment.
+* IIS fingerprinting identifies the server version and enabled features, helping determine applicable CVEs and potential attack paths such as WebDAV
+* IIS misconfigurations can be exploitable without a CVE, including:
+
+  * Directory listing enabled
+  * Unauthenticated WebDAV
+  * Exposed 
+
+    `web.config`
+  * Publicly accessible 
+
+    `trace.axd`
 
 ## Commands, tools, and techniques
 
