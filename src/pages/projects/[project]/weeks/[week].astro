@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CtfDayCard from '@/components/CtfDayCard.astro';
-import { ctfWeekDetails } from '@/data/ctfWeeks';
+import { getCtfWeekDetails } from '@/data/ctfWeeks';
 
 export async function getStaticPaths() {
   const [projects, journalEntries] = await Promise.all([
@@ -13,7 +13,12 @@ export async function getStaticPaths() {
   return projects.flatMap((project) => {
     if (project.data.draft || !project.data.journal) return [];
 
-    return ctfWeekDetails.map((week) => ({
+    const projectEntries = journalEntries.filter(
+      (entry) => !entry.data.draft && entry.data.project === project.data.journal,
+    );
+    const availableWeeks = getCtfWeekDetails(projectEntries.map((entry) => entry.data.week));
+
+    return availableWeeks.map((week) => ({
       params: {
         project: project.id.replace(/\.md$/, ''),
         week: week.slug,
@@ -21,18 +26,20 @@ export async function getStaticPaths() {
       props: {
         project,
         week,
-        entries: journalEntries
-          .filter((entry) => !entry.data.draft && entry.data.project === project.data.journal && entry.data.week === week.number)
+        availableWeeks,
+        entries: projectEntries
+          .filter((entry) => entry.data.week === week.number)
           .sort((a, b) => a.data.day - b.data.day),
       },
     }));
   });
 }
 
-const { project, week, entries } = Astro.props;
+const { project, week, availableWeeks, entries } = Astro.props;
 const projectSlug = project.id.replace(/\.md$/, '');
-const previousWeek = ctfWeekDetails.find((item) => item.number === week.number - 1);
-const nextWeek = ctfWeekDetails.find((item) => item.number === week.number + 1);
+const weekIndex = availableWeeks.findIndex((item) => item.number === week.number);
+const previousWeek = availableWeeks[weekIndex - 1];
+const nextWeek = availableWeeks[weekIndex + 1];
 ---
 
 <BaseLayout title={`${week.label}: ${week.title} • ${project.data.title}`} description={week.description}>

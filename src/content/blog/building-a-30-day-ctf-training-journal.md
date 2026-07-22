@@ -11,6 +11,8 @@ tags:
   - documentation
 draft: false
 ---
+> **Update — July 22, 2026:** This post documents the journal's original 30-day format. The project is now an open-ended [TryHackMe Jr Penetration Tester daily journal](/blog/pivoting-my-30-day-ctf-plan-to-the-tryhackme-jr-pentester-path.md) with no maximum day or week.
+
 It's been 3 months since the last update to my portfolio due to university work and exams, so I've decided to use the winter breaks to work on my CTF skills. I've added a new project for a 30-day CTF training sprint over the winter break. The goal is to sharpen the skills I already have, improve in areas where I have less experience, and document the process each day instead of only recording the final result.
 
 The project itself sounds simple: create a page, add the schedule, and update it daily. Before I could build it properly, I had to fix a larger issue with how my local repository and deployed website had drifted apart.

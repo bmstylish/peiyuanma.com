@@ -76,8 +76,8 @@ collections:
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown", required: false }
   - name: "ctfDays"
-    label: "CTF Daily Journal"
-    label_singular: "CTF Day"
+    label: "Pentesting Daily Journal"
+    label_singular: "Pentesting Day"
     folder: "src/content/ctf-days"
     create: true
     slug: "day-{{day}}-{{slug}}"
@@ -87,8 +87,8 @@ collections:
     summary: "Day {{day}} — {{title}} ({{status}})"
     fields:
       - { label: "Project ID", name: "project", widget: "string", default: "ctf-winter-break-2026" }
-      - { label: "Day", name: "day", widget: "number", value_type: "int", min: 1, max: 30 }
-      - { label: "Week", name: "week", widget: "number", value_type: "int", min: 1, max: 5 }
+      - { label: "Day", name: "day", widget: "number", value_type: "int", min: 1 }
+      - { label: "Week", name: "week", widget: "number", value_type: "int", min: 1 }
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Plan", name: "description", widget: "text" }
       - { label: "Status", name: "status", widget: "select", options: ["planned", "in-progress", "complete"], default: "planned" }

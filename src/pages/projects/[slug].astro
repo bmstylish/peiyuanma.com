@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CtfWeekCard from '@/components/CtfWeekCard.astro';
 import TagLink from '@/components/TagLink.astro';
-import { ctfWeekDetails } from '@/data/ctfWeeks';
+import { getCtfWeekDetails } from '@/data/ctfWeeks';
 
 export async function getStaticPaths() {
   const [projects, journalEntries] = await Promise.all([
@@ -27,6 +27,7 @@ export async function getStaticPaths() {
 const { project, journalEntries } = Astro.props;
 const { Content } = await project.render();
 const projectSlug = project.id.replace(/\.md$/, '');
+const journalWeeks = getCtfWeekDetails(journalEntries.map((entry) => entry.data.week));
 ---
 
 <BaseLayout title={`${project.data.title} • Projects`} description={project.data.description}>
@@ -55,7 +56,7 @@ const projectSlug = project.id.replace(/\.md$/, '');
         </div>
 
         <div class="week-grid">
-          {ctfWeekDetails.map((week) => {
+          {journalWeeks.map((week) => {
             const entries = journalEntries.filter((entry) => entry.data.week === week.number);
             const completedCount = entries.filter((entry) => entry.data.status === 'complete').length;
 

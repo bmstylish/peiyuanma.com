@@ -46,8 +46,8 @@ const ctfDays = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/ctf-days' }),
   schema: z.object({
     project: z.string(),
-    day: z.number().int().min(1).max(30),
-    week: z.number().int().min(1).max(5),
+    day: z.number().int().min(1),
+    week: z.number().int().min(1),
     title: z.string(),
     description: z.string(),
     status: z.enum(['planned', 'in-progress', 'complete']).default('planned'),

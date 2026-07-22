@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { ctfWeekDetails } from '@/data/ctfWeeks';
+import { getCtfWeekDetail } from '@/data/ctfWeeks';
 
 export async function getStaticPaths() {
   const [projects, journalEntries] = await Promise.all([
@@ -33,7 +33,7 @@ const formattedDate = entry.data.date?.toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
 });
-const week = ctfWeekDetails.find((item) => item.number === entry.data.week)!;
+const week = getCtfWeekDetail(entry.data.week);
 ---
 
 <BaseLayout title={`Day ${entry.data.day}: ${entry.data.title} • ${project.data.title}`} description={entry.data.description}>
