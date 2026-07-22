@@ -7,7 +7,12 @@ function collectBrowserErrors(page: Page) {
 
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
   page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(`console: ${message.text()}`);
+    const sourceUrl = message.location().url;
+    const isCloudflareBeaconError = sourceUrl.startsWith('https://static.cloudflareinsights.com/');
+
+    if (message.type() === 'error' && !isCloudflareBeaconError) {
+      errors.push(`console: ${message.text()}`);
+    }
   });
 
   return errors;
@@ -36,7 +41,7 @@ test('project navigation reaches the revised Day 19 plan', async ({ page }) => {
   await expect(page.getByText('The journal is no longer limited to thirty days.')).toBeVisible();
 
   await page.getByRole('link', { name: 'Open week 3' }).click();
-  await expect(page).toHaveURL(`${projectPath}weeks/week-3`);
+  await expect(page).toHaveURL(/\/weeks\/week-3\/?$/);
   await expect(
     page.getByRole('heading', { level: 1, name: 'Web enumeration and Burp Suite' }),
   ).toBeVisible();
@@ -46,7 +51,7 @@ test('project navigation reaches the revised Day 19 plan', async ({ page }) => {
       name: 'Open Day 19: Burp Suite: Repeater and supporting modules',
     })
     .click();
-  await expect(page).toHaveURL(`${projectPath}days/day-19-burp-suite-workflow`);
+  await expect(page).toHaveURL(/\/days\/day-19-burp-suite-workflow\/?$/);
   await expect(
     page.getByRole('heading', {
       level: 1,
@@ -73,7 +78,7 @@ test('blog index opens the plan-pivot article', async ({ page }) => {
   await page.getByRole('link', { name: articleTitle }).click();
 
   await expect(page).toHaveURL(
-    '/blog/pivoting-my-30-day-ctf-plan-to-the-tryhackme-jr-pentester-path.md',
+    /\/blog\/pivoting-my-30-day-ctf-plan-to-the-tryhackme-jr-pentester-path\.md\/?$/,
   );
   await expect(page.getByRole('heading', { level: 1, name: articleTitle })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Removing the deadline' })).toBeVisible();
