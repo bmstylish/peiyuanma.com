@@ -2,6 +2,7 @@
 title: Server Manager Discord Bot
 description: "Deploying a Discord bot on Ubuntu Server and further bug fixes with the bot "
 date: 2026-01-22
+category: project-notes
 tags:
   - linux
   - git

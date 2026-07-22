@@ -3,6 +3,7 @@ title: Fixing Decap CMS GitHub Login Invalid Provider
 description: Debugging a broken Decap CMS GitHub OAuth flow, fixing a malformed
   auth endpoint, and cleaning up an unused local OAuth experiment.
 date: 2026-07-13
+category: site-building
 tags:
   - decap cms
   - github

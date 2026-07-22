@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LabCard from '../../components/LabCard.astro';
 import TagLink from '../../components/TagLink.astro';
+import { labPath } from '@/utils/routes';
 
 const allLabs = await getCollection('labs');
 const labs = allLabs
@@ -30,7 +31,7 @@ const allTags = [...new Set(labs.flatMap((lab) => lab.data.tags).map((tag) => ta
         tags={lab.data.tags}
         status={lab.data.status}
         description={lab.data.description}
-        href={`/labs/${lab.id}`}
+        href={labPath(lab.data.title)}
       />
     ))}
   </div>

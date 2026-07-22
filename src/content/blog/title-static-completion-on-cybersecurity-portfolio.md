@@ -4,6 +4,7 @@ description: Building a static-first personal site with Astro, Cloudflare Pages,
   and Decap CMS, focusing on simplicity, security, and long-term
   maintainability.
 date: 2026-01-15
+category: site-building
 tags:
   - astro
   - cloudflare

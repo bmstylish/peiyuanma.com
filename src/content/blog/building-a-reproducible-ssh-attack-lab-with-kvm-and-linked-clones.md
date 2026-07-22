@@ -3,6 +3,7 @@ title: Building a Reproducible SSH Attack Lab with KVM and Linked Clones
 description: Designing a repeatable SSH security lab with KVM, linked clones,
   and minimal storage overhead
 date: 2026-01-31
+category: homelab
 tags:
   - cybersecurity
   - homelab

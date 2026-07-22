@@ -2,18 +2,31 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TagLink from '../../components/TagLink.astro';
+import { labPath, sourceSlug, titleSlug } from '@/utils/routes';
 
 export async function getStaticPaths() {
   const labs = await getCollection('labs');
   return labs
     .filter((l) => !l.data.draft)
-    .map((lab) => ({
-      params: { slug: lab.id },
-      props: { lab },
-    }));
+    .flatMap((lab) => {
+      const canonicalSlug = titleSlug(lab.data.title);
+      const legacySlugs = new Set([lab.id, sourceSlug(lab.id)]);
+
+      return [
+        { params: { slug: canonicalSlug }, props: { lab } },
+        ...[...legacySlugs]
+          .filter((slug) => slug !== canonicalSlug)
+          .map((slug) => ({
+            params: { slug },
+            props: { lab, redirectTo: labPath(lab.data.title) },
+          })),
+      ];
+    });
 }
 
-const { lab } = Astro.props;
+const { lab, redirectTo } = Astro.props;
+if (redirectTo) return Astro.redirect(redirectTo, 301);
+
 const { Content } = await lab.render();
 
 const formattedDate = lab.data.date.toLocaleDateString('en-US', {
@@ -43,7 +56,7 @@ const formattedDate = lab.data.date.toLocaleDateString('en-US', {
     </div>
 
     <footer class="post-footer">
-      <a href="/labs" class="back-link">← Back to labs</a>
+      <a href="/labs/" class="back-link">← Back to labs</a>
     </footer>
   </article>
 </BaseLayout>

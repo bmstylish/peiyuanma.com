@@ -3,6 +3,7 @@ title: My Home Lab Setup (So Far)
 description: "What I’m using to learn: a small Ubuntu server, monitoring, and a
   plan for future labs"
 date: 2026-01-14
+category: homelab
 tags:
   - homelab
   - linux

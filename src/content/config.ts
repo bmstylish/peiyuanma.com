@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { BLOG_CATEGORY_KEYS } from '@/utils/routes';
 
 const blog = defineCollection({
   type: 'content',
@@ -7,6 +8,7 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    category: z.enum(BLOG_CATEGORY_KEYS),
     tags: z.array(z.string()),
     draft: z.boolean().default(false),
   }),

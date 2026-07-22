@@ -2,6 +2,7 @@
 title: Upgrading My Portfolio Site (Labs)
 description: Converted Labs from a static list into dynamic, blog-style write-ups
 date: 2026-02-09
+category: site-building
 tags:
   - astro
   - static sites

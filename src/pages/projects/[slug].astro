@@ -4,6 +4,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CtfWeekCard from '@/components/CtfWeekCard.astro';
 import TagLink from '@/components/TagLink.astro';
 import { getCtfWeekDetails } from '@/data/ctfWeeks';
+import {
+  journalWeekPath,
+  projectPath,
+  sourceSlug,
+  titleSlug,
+} from '@/utils/routes';
 
 export async function getStaticPaths() {
   const [projects, journalEntries] = await Promise.all([
@@ -13,20 +19,32 @@ export async function getStaticPaths() {
 
   return projects
     .filter((project) => !project.data.draft && project.data.writeup)
-    .map((project) => ({
-      params: { slug: project.id.replace(/\.md$/, '') },
-      props: {
+    .flatMap((project) => {
+      const canonicalSlug = titleSlug(project.data.title);
+      const legacySlug = sourceSlug(project.id);
+      const props = {
         project,
         journalEntries: journalEntries
           .filter((entry) => !entry.data.draft && entry.data.project === project.data.journal)
           .sort((a, b) => a.data.day - b.data.day),
-      },
-    }));
+      };
+
+      return [
+        { params: { slug: canonicalSlug }, props },
+        ...(legacySlug !== canonicalSlug
+          ? [{
+              params: { slug: legacySlug },
+              props: { ...props, redirectTo: projectPath(project.data.title) },
+            }]
+          : []),
+      ];
+    });
 }
 
-const { project, journalEntries } = Astro.props;
+const { project, journalEntries, redirectTo } = Astro.props;
+if (redirectTo) return Astro.redirect(redirectTo, 301);
+
 const { Content } = await project.render();
-const projectSlug = project.id.replace(/\.md$/, '');
 const journalWeeks = getCtfWeekDetails(journalEntries.map((entry) => entry.data.week));
 ---
 
@@ -67,7 +85,7 @@ const journalWeeks = getCtfWeekDetails(journalEntries.map((entry) => entry.data.
                 description={week.description}
                 dayCount={entries.length}
                 completedCount={completedCount}
-                href={`/projects/${projectSlug}/weeks/${week.slug}`}
+                href={journalWeekPath(project.data.title, week.number, week.title)}
               />
             );
           })}
@@ -76,7 +94,7 @@ const journalWeeks = getCtfWeekDetails(journalEntries.map((entry) => entry.data.
     )}
 
     <footer class="project-footer">
-      <a href="/projects" class="back-link">← Back to projects</a>
+      <a href="/projects/" class="back-link">← Back to projects</a>
     </footer>
   </article>
 </BaseLayout>

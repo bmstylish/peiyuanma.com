@@ -9,5 +9,5 @@ export function tagSlug(tag: string): string {
 }
 
 export function tagHref(tag: string): string {
-  return `/tags/${tagSlug(tag)}`;
+  return `/tags/${tagSlug(tag)}/`;
 }

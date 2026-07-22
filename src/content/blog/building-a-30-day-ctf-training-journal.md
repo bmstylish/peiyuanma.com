@@ -3,6 +3,7 @@ title: "Building a 30-Day CTF Training Journal + Improving Portfolio Navigation 
 description: Turning a winter break CTF plan into a structured, Decap-editable
   project journal while safely reconciling local and deployed site changes.
 date: 2026-07-01
+category: learning-journal
 tags:
   - ctf
   - astro
@@ -11,7 +12,7 @@ tags:
   - documentation
 draft: false
 ---
-> **Update — July 22, 2026:** This post documents the journal's original 30-day format. The project is now an open-ended [TryHackMe Jr Penetration Tester daily journal](/blog/pivoting-my-30-day-ctf-plan-to-the-tryhackme-jr-pentester-path.md) with no maximum day or week.
+> **Update — July 22, 2026:** This post documents the journal's original 30-day format. The project is now an open-ended [TryHackMe Jr Penetration Tester daily journal](/blog/learning-journal/turning-my-ctf-sprint-into-an-open-ended-tryhackme-jr-pentester-journal/) with no maximum day or week.
 
 It's been 3 months since the last update to my portfolio due to university work and exams, so I've decided to use the winter breaks to work on my CTF skills. I've added a new project for a 30-day CTF training sprint over the winter break. The goal is to sharpen the skills I already have, improve in areas where I have less experience, and document the process each day instead of only recording the final result.
 
@@ -104,13 +105,13 @@ Decap commits those changes to GitHub, which then triggers Cloudflare to rebuild
 
 ## Astro Routing and Content Collections
 
-The final route structure is: 
+The current route structure is generated from visible titles and grouped by content type:
 
-`/projects/30-days-of-ctf-winter-break-2026`
+`/projects/tryhackme-jr-penetration-tester-daily-learning-journal/`
 
-`/projects/30-days-of-ctf-winter-break-2026/weeks/week-1`
+`/projects/tryhackme-jr-penetration-tester-daily-learning-journal/journal/weeks/week-1-linux-and-general-ctf-skills/`
 
-`/projects/30-days-of-ctf-winter-break-2026/days/day-01-bandit-010`
+`/projects/tryhackme-jr-penetration-tester-daily-learning-journal/journal/days/day-01-bandit-0-10/`
 
 The daily entries live in their own Astro content collection. I initially ran into a collection-path mismatch because the collection was named `ctfDays` while the content folder was named `ctf-days`.
 

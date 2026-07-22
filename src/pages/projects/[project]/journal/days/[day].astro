@@ -1,0 +1,124 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCtfWeekDetail } from '@/data/ctfWeeks';
+import { journalWeekPath, titleSlug } from '@/utils/routes';
+
+export async function getStaticPaths() {
+  const [projects, journalEntries] = await Promise.all([
+    getCollection('projects'),
+    getCollection('ctfDays'),
+  ]);
+
+  return journalEntries
+    .filter((entry) => !entry.data.draft)
+    .flatMap((entry) => {
+      const project = projects.find((item) => item.data.journal === entry.data.project);
+      if (!project || project.data.draft) return [];
+
+      const dayNumber = String(entry.data.day).padStart(2, '0');
+      return [{
+        params: {
+          project: titleSlug(project.data.title),
+          day: `day-${dayNumber}-${titleSlug(entry.data.title)}`,
+        },
+        props: { entry, project },
+      }];
+    });
+}
+
+const { entry, project } = Astro.props;
+const { Content } = await render(entry);
+const formattedDate = entry.data.date?.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const week = getCtfWeekDetail(entry.data.week);
+---
+
+<BaseLayout title={`Day ${entry.data.day}: ${entry.data.title} • ${project.data.title}`} description={entry.data.description}>
+  <article class="daily-entry">
+    <header class="entry-header">
+      <p class="day-label">Day {entry.data.day} · {week.label}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="entry-description">{entry.data.description}</p>
+
+      <div class="entry-meta">
+        <span class:list={['badge', entry.data.status]}>{entry.data.status}</span>
+        {formattedDate && <time datetime={entry.data.date.toISOString()}>{formattedDate}</time>}
+      </div>
+    </header>
+
+    <div class="entry-content">
+      <Content />
+    </div>
+
+    <footer class="entry-footer">
+      <a
+        href={journalWeekPath(project.data.title, week.number, week.title)}
+        class="back-link"
+      >
+        ← Back to {week.label.toLowerCase()}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .daily-entry {
+    max-width: 720px;
+  }
+
+  .entry-header {
+    margin-bottom: calc(var(--spacing-unit) * 6);
+    padding-bottom: calc(var(--spacing-unit) * 4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .day-label {
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .entry-description {
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
+  }
+
+  .entry-meta {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-top: calc(var(--spacing-unit) * 3);
+  }
+
+  time {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .entry-content {
+    margin-bottom: calc(var(--spacing-unit) * 8);
+  }
+
+  .entry-footer {
+    padding-top: calc(var(--spacing-unit) * 4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+</style>

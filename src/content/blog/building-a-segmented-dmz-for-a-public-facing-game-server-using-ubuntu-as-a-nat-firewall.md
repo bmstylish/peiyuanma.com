@@ -3,6 +3,7 @@ title: Building A Segmented DMZ for a Public-Facing Game Server Using Ubuntu as
   A NAT Firewall
 description: Isolating Windows server to protect the LAN
 date: 2026-03-02
+category: homelab
 tags:
   - network_security
   - network_segmentation

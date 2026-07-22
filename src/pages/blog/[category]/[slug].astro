@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TagLink from '@/components/TagLink.astro';
+import {
+  BLOG_CATEGORIES,
+  blogCategoryPath,
+  titleSlug,
+} from '@/utils/routes';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: {
+        category: post.data.category,
+        slug: titleSlug(post.data.title),
+      },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const categoryDetails = BLOG_CATEGORIES[post.data.category];
+const formattedDate = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={`${post.data.title} • Blog`} description={post.data.description}>
+  <article class="blog-post">
+    <header class="post-header">
+      <a class="post-category" href={blogCategoryPath(post.data.category)}>
+        {categoryDetails.label}
+      </a>
+      <h1>{post.data.title}</h1>
+
+      <div class="post-meta">
+        <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+
+        <div class="post-tags">
+          {post.data.tags.map((tag) => <TagLink tag={tag} />)}
+        </div>
+      </div>
+    </header>
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <a href={blogCategoryPath(post.data.category)} class="back-link">
+        ← Back to {categoryDetails.label}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    max-width: 720px;
+  }
+
+  .post-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-category {
+    display: inline-block;
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .post-meta time {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .post-content {
+    margin-bottom: 64px;
+  }
+
+  .post-footer {
+    padding-top: 32px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+</style>

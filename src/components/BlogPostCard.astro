@@ -1,15 +1,18 @@
 ---
 import TagLink from './TagLink.astro';
+import { BLOG_CATEGORIES, blogCategoryPath, type BlogCategory } from '@/utils/routes';
 
 interface Props {
   title: string;
   description: string;
   date: Date;
   tags: string[];
-  slug: string;
+  category: BlogCategory;
+  href: string;
 }
 
-const { title, description, date, tags, slug } = Astro.props;
+const { title, description, date, tags, category, href } = Astro.props;
+const categoryDetails = BLOG_CATEGORIES[category];
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -20,8 +23,9 @@ const formattedDate = date.toLocaleDateString('en-US', {
 
 <article class="post-card">
   <div class="post-content">
+    <a class="post-category" href={blogCategoryPath(category)}>{categoryDetails.label}</a>
     <div class="post-header">
-      <h2><a href={`/blog/${slug}`}>{title}</a></h2>
+      <h2><a href={href}>{title}</a></h2>
       <time datetime={date.toISOString()}>{formattedDate}</time>
     </div>
     <p class="post-description">{description}</p>
@@ -54,6 +58,17 @@ const formattedDate = date.toLocaleDateString('en-US', {
     align-items: baseline;
     gap: calc(var(--spacing-unit) * 2);
     margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+
+  .post-category {
+    display: inline-block;
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   
   .post-header h2 {

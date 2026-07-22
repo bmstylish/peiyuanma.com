@@ -3,15 +3,24 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogPostCard from '@/components/BlogPostCard.astro';
 import TagLink from '@/components/TagLink.astro';
+import {
+  BLOG_CATEGORIES,
+  BLOG_CATEGORY_KEYS,
+  blogCategoryPath,
+  blogPostPath,
+} from '@/utils/routes';
 
 const allPosts = await getCollection('blog');
-console.log("Blog Posts Found:", allPosts.map(p => p.slug));
 const posts = allPosts
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-console.log("VISIBLE POSTS:", posts.map(p => ({ slug: p.slug, draft: p.data.draft, date: p.data.date })));
 const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
+const categories = BLOG_CATEGORY_KEYS.map((key) => ({
+  key,
+  ...BLOG_CATEGORIES[key],
+  count: posts.filter((post) => post.data.category === key).length,
+})).filter((category) => category.count > 0);
 ---
 
 <BaseLayout 
@@ -23,6 +32,16 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
     Technical writeups, incident analysis, and security research notes. 
     Focused on practical defensive security and detection engineering.
   </p>
+
+  <nav class="category-grid" aria-label="Blog categories">
+    {categories.map((category) => (
+      <a class="category-card" href={blogCategoryPath(category.key)}>
+        <span>{category.label}</span>
+        <small>{category.count} {category.count === 1 ? 'post' : 'posts'}</small>
+        <p>{category.description}</p>
+      </a>
+    ))}
+  </nav>
 
   <div class="tags-filter">
     <span class="filter-label">Tags:</span>
@@ -38,7 +57,8 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
         description={post.data.description}
         date={post.data.date}
         tags={post.data.tags}
-        slug={post.id}
+        category={post.data.category}
+        href={blogPostPath(post.data.category, post.data.title)}
       />
     ))}
   </div>
@@ -49,6 +69,43 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
     font-size: 1.0625rem;
     color: var(--color-text-muted);
     margin-bottom: calc(var(--spacing-unit) * 4);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+  }
+
+  .category-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: calc(var(--spacing-unit) * 1);
+    padding: calc(var(--spacing-unit) * 3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .category-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .category-card span {
+    color: var(--color-text-heading);
+    font-weight: 600;
+  }
+
+  .category-card small,
+  .category-card p {
+    color: var(--color-text-muted);
+  }
+
+  .category-card p {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.9rem;
   }
   
   .tags-filter {
@@ -75,5 +132,11 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
     display: flex;
     flex-direction: column;
     gap: calc(var(--spacing-unit) * 3);
+  }
+
+  @media (max-width: 680px) {
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -2,6 +2,7 @@
 title: "Deploying Pi-Hole alongside KVM/libvirt in Homelab "
 description: "Setting up a DNS sinkhole (Pi-hole) on home server "
 date: 2026-04-28
+category: homelab
 tags:
   - pi-hole
   - DNS
