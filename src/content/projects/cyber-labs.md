@@ -1,6 +1,7 @@
 ---
 title: "Cyber Labs (Writeups First)"
 description: "A growing set of lab exercises focused on fundamentals. Starting with documentation and repeatability before spinning up vulnerable machines."
+date: 2026-07-01
 tags:
   - "linux"
   - "networking"

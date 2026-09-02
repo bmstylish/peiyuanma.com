@@ -1,6 +1,7 @@
 ---
 title: "Home Server Monitoring + Discord Alerts"
 description: "Ubuntu server with health checks and automated Discord notifications for uptime/temperature/status."
+date: 2026-07-01
 tags:
   - "ubuntu"
   - "systemd"

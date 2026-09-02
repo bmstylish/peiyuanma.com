@@ -8,6 +8,7 @@ description: >-
 
 
   I built it to solve a real student workflow problem: staying current with cybersecurity news without spending hours reading every article. The automation helps me quickly skim important stories, identify topics worth deeper research, and keep up with threat activity relevant to my homelab and learning goals.
+date: 2026-08-13
 tags:
   - n8n
   - Docker

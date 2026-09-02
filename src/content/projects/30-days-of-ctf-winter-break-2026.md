@@ -1,6 +1,7 @@
 ---
 title: "TryHackMe Jr Penetration Tester: Daily Learning Journal"
 description: "An open-ended, day-by-day practical journal following TryHackMe's Jr Penetration Tester path, with completed rooms, authorised practice, and reproducible notes."
+date: 2026-07-01
 tags:
   - "ctf"
   - "linux"

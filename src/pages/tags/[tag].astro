@@ -51,7 +51,7 @@ const labs = allLabs
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const projects = allProjects
   .filter((item) => !item.data.draft && matchesTag(item.data.tags))
-  .sort((a, b) => a.data.order - b.data.order);
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || a.data.order - b.data.order);
 const resultCount = posts.length + labs.length + projects.length;
 ---
 
@@ -106,6 +106,7 @@ const resultCount = posts.length + labs.length + projects.length;
           <ProjectCard
             title={project.data.title}
             description={project.data.description}
+            date={project.data.date}
             tags={project.data.tags}
             github={project.data.github}
             demo={project.data.demo}

@@ -8,7 +8,7 @@ import { projectPath } from '@/utils/routes';
 const allProjects = await getCollection('projects');
 const projects = allProjects
   .filter((project) => !project.data.draft)
-  .sort((a, b) => a.data.order - b.data.order);
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || a.data.order - b.data.order);
 const allTags = [...new Set(projects.flatMap((project) => project.data.tags).map((tag) => tag.toLowerCase()))].sort();
 ---
 
@@ -32,6 +32,7 @@ const allTags = [...new Set(projects.flatMap((project) => project.data.tags).map
       <ProjectCard
         title={project.data.title}
         description={project.data.description}
+        date={project.data.date}
         tags={project.data.tags}
         github={project.data.github}
         demo={project.data.demo}
