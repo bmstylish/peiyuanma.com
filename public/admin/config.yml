@@ -61,11 +61,12 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    sortable_fields: ["order", "title", "status"]
-    summary: "{{order}}. {{title}} — {{status}}"
+    sortable_fields: ["date", "order", "title", "status"]
+    summary: "{{date}} — {{title}} — {{status}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
       - { label: "Tags", name: "tags", widget: "list", default: [] }
       - { label: "GitHub URL", name: "github", widget: "string", required: false }
       - { label: "Demo URL", name: "demo", widget: "string", required: false }
