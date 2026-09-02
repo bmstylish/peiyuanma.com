@@ -2,26 +2,28 @@
 const currentPath = Astro.url.pathname;
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/about/', label: 'About' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/labs/', label: 'Labs' },
-  { href: '/blog/', label: 'Blog' },
+  { href: '/projects/', label: 'Projects', activePath: '/projects/' },
+  { href: '/labs/', label: 'Writeups', activePath: '/labs/' },
+  { href: '/blog/', label: 'Blog', activePath: '/blog/' },
+  { href: '/', label: 'About', activePath: '/' },
 ];
 ---
 
 <header>
   <div class="header-content">
-    <div class="header-title">
-      <a href="/" class="logo">peiyuan.ma</a>
-    </div>
-    <nav>
-      {navItems.map(item => (
+    <a href="/" class="logo" aria-label="Peiyuan Ma, home">peiyuan.ma</a>
+    <nav aria-label="Primary navigation">
+      {navItems.map((item) => (
         <a
           href={item.href}
           class:list={[
             'nav-link',
-            { active: currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }
+            {
+              active:
+                item.activePath === '/'
+                  ? currentPath === '/'
+                  : currentPath.startsWith(item.activePath),
+            },
           ]}
         >
           {item.label}
@@ -33,62 +35,86 @@ const navItems = [
 
 <style>
   header {
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 100;
-    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
   }
 
   .header-content {
-    max-width: var(--max-width);
+    width: 100%;
+    max-width: 1440px;
+    min-height: 82px;
     margin: 0 auto;
-    padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+    padding: 1.4rem var(--shell-gutter);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
   .logo {
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    font-weight: 600;
     color: var(--color-text-heading);
-  }
-
-  .logo:hover {
-    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
   }
 
   nav {
     display: flex;
-    gap: calc(var(--spacing-unit) * 3);
+    align-items: center;
+    gap: clamp(1.65rem, 3.4vw, 3.25rem);
   }
 
   .nav-link {
-    font-size: 0.9375rem;
+    position: relative;
+    padding: 0.5rem 0;
     color: var(--color-text-muted);
-    transition: color 0.2s;
+    font-size: 0.92rem;
+    transition: color 180ms ease;
   }
 
-  .nav-link:hover {
-    color: var(--color-text-heading);
-  }
-
+  .nav-link:hover,
+  .nav-link:focus-visible,
   .nav-link.active {
     color: var(--color-accent);
   }
 
-  @media (max-width: 768px) {
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -0.18rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 620px) {
     .header-content {
-      flex-direction: column;
-      gap: calc(var(--spacing-unit) * 2);
-      align-items: flex-start;
+      min-height: 62px;
+      padding-block: 0.8rem;
     }
 
     nav {
-      gap: calc(var(--spacing-unit) * 2);
+      gap: clamp(0.7rem, 3.2vw, 1.15rem);
+    }
+
+    .logo {
+      font-size: 0.76rem;
+    }
+
+    .nav-link {
+      font-size: 0.73rem;
+    }
+  }
+
+  @media (max-width: 365px) {
+    .header-content {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.3rem;
     }
   }
 </style>

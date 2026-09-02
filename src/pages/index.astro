@@ -6,141 +6,183 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   title="Peiyuan Ma • Cybersecurity Portfolio"
   description="Cybersecurity student portfolio: projects, labs, and technical writing."
 >
-  <section class="intro">
-    <h1>Peiyuan (Bobby) Ma</h1>
-    <p class="lead">
-      Cybersecurity student building practical projects, documenting what I learn,
-      and turning a home lab into a real engineering playground.
-    </p>
-    <p class="sub">
-      Interests: blue-team foundations, detection & response, Linux hardening, and
-      building tooling that makes security measurable.
-    </p>
-  </section>
+  <section class="hero" aria-labelledby="home-title">
+    <div class="hero-content">
+      <p class="hello">hi, i’m</p>
+      <h1 id="home-title">Peiyuan <span>(Bobby)</span> Ma</h1>
+      <p class="lead">
+        Cybersecurity student building practical projects,<br class="desktop-break" />
+        running labs, and documenting what I learn.
+      </p>
+      <p class="prompt" aria-hidden="true">&gt;_</p>
 
-  <div class="status-box">
-    <h3>Current Status</h3>
-    <p>
-      Building my portfolio + blog • Running an Ubuntu home server with monitoring
-      + Discord alerts • Preparing to publish hands-on lab writeups
-    </p>
-  </div>
-
-  <section class="focus-areas">
-    <h2>What I’m focusing on</h2>
-    <div class="grid">
-      <div class="focus-card">
-        <h3>Linux & Infrastructure</h3>
-        <p>Hardening servers, service monitoring, backups, and clean deployments.</p>
-      </div>
-      <div class="focus-card">
-        <h3>Detection Thinking</h3>
-        <p>Learning how to translate attacker behavior into telemetry and rules.</p>
-      </div>
-      <div class="focus-card">
-        <h3>Security Labs</h3>
-        <p>Building repeatable exercises and documenting the results clearly.</p>
-      </div>
-      <div class="focus-card">
-        <h3>Writing</h3>
-        <p>Short, practical posts that explain what I built, broke, and fixed.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="quick-links">
-    <h2>Explore</h2>
-    <div class="link-grid">
-      <a href="/projects/" class="link-card">
-        <h3>Projects</h3>
-        <p>Things I’ve built and shipped</p>
-      </a>
-      <a href="/labs/" class="link-card">
-        <h3>Labs</h3>
-        <p>Hands-on exercises (writeups first)</p>
-      </a>
-      <a href="/blog/" class="link-card">
-        <h3>Blog</h3>
-        <p>Notes, guides, and progress logs</p>
-      </a>
+      <nav class="hero-links" aria-label="Explore my work">
+        <a href="/projects/">
+          <span>Projects</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/labs/">
+          <span>Writeups</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/blog/">
+          <span>Blog</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .intro {
-    margin-bottom: calc(var(--spacing-unit) * 6);
+  .hero {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    align-items: center;
+    padding: 2rem var(--page-gutter);
+  }
+
+  .hero-content {
+    width: min(100%, 1010px);
+    margin-inline: auto;
+  }
+
+  .hello,
+  .prompt {
+    font-family: var(--font-mono);
+  }
+
+  .hello {
+    margin: 0 0 1.45rem;
+    color: var(--color-accent);
+    font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    max-width: 980px;
+    margin: 0;
+    font-size: clamp(3.1rem, 6.4vw, 6.25rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  h1 span {
+    white-space: nowrap;
   }
 
   .lead {
-    font-size: 1.125rem;
+    margin: clamp(2rem, 4.5vh, 3.25rem) 0 0;
     color: var(--color-text);
-    line-height: 1.7;
-    margin-bottom: calc(var(--spacing-unit) * 2);
+    font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+    line-height: 1.58;
   }
 
-  .sub {
-    color: var(--color-text-muted);
-    margin-bottom: 0;
+  .prompt {
+    margin: 2.15rem 0 0;
+    color: var(--color-accent);
+    font-size: 1.05rem;
   }
 
-  .grid {
+  .hero-links {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: calc(var(--spacing-unit) * 3);
-    margin-top: calc(var(--spacing-unit) * 3);
+    grid-template-columns: repeat(3, minmax(150px, 190px));
+    gap: clamp(2.5rem, 7vw, 6rem);
+    margin-top: clamp(3.25rem, 7vh, 5rem);
   }
 
-  .focus-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: calc(var(--spacing-unit) * 3);
-  }
-
-  .focus-card h3 {
-    margin-top: 0;
-    margin-bottom: calc(var(--spacing-unit) * 2);
-    font-size: 1rem;
+  .hero-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 0.8rem;
+    border-bottom: 1px solid var(--color-border-strong);
     color: var(--color-text-heading);
+    font-size: clamp(1.3rem, 2vw, 1.75rem);
+    line-height: 1;
+    transition: border-color 180ms ease, color 180ms ease;
   }
 
-  .focus-card p {
-    margin: 0;
-    font-size: 0.9375rem;
-    color: var(--color-text-muted);
+  .hero-links .arrow {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+    transition: transform 180ms ease;
   }
 
-  .link-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: calc(var(--spacing-unit) * 3);
-    margin-top: calc(var(--spacing-unit) * 3);
-  }
-
-  .link-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: calc(var(--spacing-unit) * 3);
-    transition: all 0.2s;
-  }
-
-  .link-card:hover {
+  .hero-links a:hover,
+  .hero-links a:focus-visible {
     border-color: var(--color-accent);
-    transform: translateY(-2px);
+    color: var(--color-accent);
   }
 
-  .link-card h3 {
-    margin-top: 0;
-    margin-bottom: calc(var(--spacing-unit) * 1);
-    font-size: 1.125rem;
-    color: var(--color-text-heading);
+  .hero-links a:hover .arrow,
+  .hero-links a:focus-visible .arrow {
+    transform: translateX(0.35rem);
   }
 
-  .link-card p {
-    margin: 0;
-    font-size: 0.9375rem;
-    color: var(--color-text-muted);
+  @media (max-width: 760px) {
+    .hero {
+      align-items: center;
+      padding-block: 1.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2.65rem, 13vw, 4.4rem);
+      line-height: 1.01;
+    }
+
+    .desktop-break {
+      display: none;
+    }
+
+    .hello {
+      margin-bottom: 1rem;
+    }
+
+    .lead {
+      margin-top: 1.75rem;
+      line-height: 1.48;
+    }
+
+    .prompt {
+      margin-top: 1.65rem;
+    }
+
+    .hero-links {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+      width: min(100%, 250px);
+      margin-top: 2.25rem;
+    }
+
+    .hero-links a {
+      padding-bottom: 0.6rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-height: 720px) and (min-width: 761px) {
+    .hello {
+      margin-bottom: 1rem;
+    }
+
+    .lead,
+    .prompt {
+      margin-top: 1.4rem;
+    }
+
+    .hero-links {
+      margin-top: 2.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-links .arrow {
+      transition: none;
+    }
   }
 </style>

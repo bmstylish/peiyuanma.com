@@ -13,6 +13,7 @@ const {
   description = 'Cybersecurity research, projects, and technical writing'
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const isHome = Astro.url.pathname === '/';
 ---
 
 <!DOCTYPE html>
@@ -26,7 +27,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
   <title>{title}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
-<body>
+<body class:list={{ 'is-home': isHome }}>
   <Header />
   <main>
     <slot />
