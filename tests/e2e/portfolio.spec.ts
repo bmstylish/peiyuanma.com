@@ -124,6 +124,19 @@ test('published legacy URLs redirect to clean canonical routes', async ({ page }
   expect(browserErrors).toEqual([]);
 });
 
+test('footer only shows supported social profiles', async ({ page }) => {
+  const browserErrors = collectBrowserErrors(page);
+
+  await page.goto('/');
+  const footer = page.locator('footer');
+
+  await expect(footer.getByRole('link', { name: 'GitHub' })).toBeVisible();
+  await expect(footer.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
+  await expect(footer.getByRole('link', { name: 'Twitter' })).toHaveCount(0);
+
+  expect(browserErrors).toEqual([]);
+});
+
 test('Day 30 remains a normal journal entry with practice and reporting links', async ({ page }) => {
   const browserErrors = collectBrowserErrors(page);
 
