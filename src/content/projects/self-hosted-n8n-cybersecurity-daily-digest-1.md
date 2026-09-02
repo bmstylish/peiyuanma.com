@@ -4,6 +4,7 @@ description: CyberSignal is a self-hosted n8n automation I built to collect and
   filter cybersecurity news, vulnerabilities and threat research, then send a
   short daily digest to Discord. It helps me stay up to date with the industry
   and find topics worth looking into further.
+date: 2026-08-13
 tags:
   - n8n
   - Docker
@@ -17,21 +18,12 @@ tags:
   - JavaScript
 github: https://github.com/bmstylish/CyberSignal
 status: active
-lessons: >-
-  This project taught me how important workflow design is in automation. Early
-  versions sent duplicate Discord messages because parallel RSS branches
-  triggered downstream nodes separately, so I redesigned the workflow to merge
-  sources before normalization and delivery.
-
-
-  I also learned that persistent memory matters for useful daily automation. A digest that repeats the same links quickly becomes noise, so I added file-backed seen-item memory to filter old stories and surface the next best unseen items.
-
-
-  The biggest lesson was balancing reliability with usefulness: native n8n RSS/HTTP nodes were more reliable than custom fetch logic, while custom Code nodes were better for normalization, scoring, formatting, and memory.
+lessons: I learned how to structure n8n workflows properly, prevent duplicate
+  outputs, use persistent memory, and decide when native nodes or custom code
+  were the better option.
 writeup: false
 order: 0
 draft: false
-date: 2026-08-13
 ---
 ## Overview
 
