@@ -1,14 +1,9 @@
 ---
 title: "Self-Hosted n8n cybersecurity daily digest "
-description: >-
-  CyberSignal is a self-hosted n8n automation that collects cybersecurity news,
-  vulnerability updates, threat research, and security technology stories each
-  morning, ranks them by relevance, removes repeated stories, and posts a
-  concise daily digest into Discord.
-
-
-  I built it to solve a real student workflow problem: staying current with cybersecurity news without spending hours reading every article. The automation helps me quickly skim important stories, identify topics worth deeper research, and keep up with threat activity relevant to my homelab and learning goals.
-date: 2026-08-13
+description: CyberSignal is a self-hosted n8n automation I built to collect and
+  filter cybersecurity news, vulnerabilities and threat research, then send a
+  short daily digest to Discord. It helps me stay up to date with the industry
+  and find topics worth looking into further.
 tags:
   - n8n
   - Docker
@@ -36,6 +31,7 @@ lessons: >-
 writeup: false
 order: 0
 draft: false
+date: 2026-08-13
 ---
 ## Overview
 
