@@ -1,18 +1,21 @@
 ---
 title: "TryHackMe Jr Penetration Tester: Daily Learning Journal"
-description: "An open-ended, day-by-day practical journal following TryHackMe's Jr Penetration Tester path, with completed rooms, authorised practice, and reproducible notes."
+description: An open-ended, day-by-day practical journal following TryHackMe's
+  Jr Penetration Tester path, with completed rooms, authorised practice, and
+  reproducible notes.
 date: 2026-07-01
 tags:
-  - "ctf"
-  - "linux"
-  - "web security"
-  - "tryhackme"
-  - "penetration testing"
-  - "burp suite"
-status: "active"
-lessons: "A structured methodology, deliberate practice, and reproducible notes turn individual challenges into transferable penetration-testing skills."
+  - ctf
+  - linux
+  - web security
+  - tryhackme
+  - penetration testing
+  - burp suite
+status: archived
+lessons: A structured methodology, deliberate practice, and reproducible notes
+  turn individual challenges into transferable penetration-testing skills.
 writeup: true
-journal: "ctf-winter-break-2026"
+journal: ctf-winter-break-2026
 order: 0
 draft: false
 ---
