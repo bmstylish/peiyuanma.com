@@ -1,0 +1,102 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LabCard from '@/components/LabCard.astro';
+import { sourceSlug, writeupPath } from '@/utils/routes';
+
+export async function getStaticPaths() {
+  const [sources, labs] = await Promise.all([
+    getCollection('writeupSources'),
+    getCollection('labs'),
+  ]);
+
+  return sources
+    .filter((source) => !source.data.draft)
+    .map((source) => {
+      const id = sourceSlug(source.id);
+      const challenges = labs
+        .filter((lab) => !lab.data.draft && lab.data.source === id)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+      return {
+        params: { source: id },
+        props: { source, sourceId: id, challenges },
+      };
+    });
+}
+
+const { source, sourceId, challenges } = Astro.props;
+const challengeCountLabel = `${challenges.length} ${challenges.length === 1 ? 'challenge' : 'challenges'}`;
+---
+
+<BaseLayout title={`${source.data.name} • Writeups`} description={`${source.data.name} challenge writeups`}>
+  <div class="source-page-heading">
+    <h1 class="listing-title">{source.data.name}</h1>
+    <span>{challengeCountLabel}</span>
+  </div>
+
+  {challenges.length > 0 ? (
+    <div class="labs-grid">
+      {challenges.map((lab) => (
+        <LabCard
+          title={lab.data.title}
+          difficulty={lab.data.difficulty}
+          tags={lab.data.tags}
+          status={lab.data.status}
+          description={lab.data.description}
+          href={writeupPath(sourceId, lab.data.title)}
+        />
+      ))}
+    </div>
+  ) : (
+    <p class="empty-source">No challenges have been added yet.</p>
+  )}
+
+  <a class="back-link" href="/writeups/">← All writeup sources</a>
+</BaseLayout>
+
+<style>
+  .source-page-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: calc(var(--spacing-unit) * 3);
+  }
+
+  .source-page-heading span {
+    flex: none;
+    color: var(--color-text-faint);
+    font-size: 0.75rem;
+  }
+
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: calc(var(--spacing-unit) * 3);
+  }
+
+  .empty-source {
+    margin: 0;
+    padding: calc(var(--spacing-unit) * 3);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-faint);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: calc(var(--spacing-unit) * 6);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: var(--color-text-heading);
+  }
+
+  @media (max-width: 620px) {
+    .labs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

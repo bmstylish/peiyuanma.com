@@ -17,12 +17,24 @@ const blog = defineCollection({
 const labs = defineCollection({
   type: 'content',
   schema: z.object({
+    source: z.string().min(1),
     title: z.string(),
     description: z.string(),
     date: z.date(),
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
     tags: z.array(z.string()).default([]),
     status: z.enum(['planned', 'in-progress', 'complete']),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const writeupSources = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/writeup-sources' }),
+  schema: z.object({
+    name: z.string(),
+    type: z.enum(['platform', 'event', 'independent']),
+    website: z.union([z.string().url(), z.literal('')]).optional(),
+    order: z.number().int().default(0),
     draft: z.boolean().default(false),
   }),
 });
@@ -59,4 +71,4 @@ const ctfDays = defineCollection({
   }),
 });
 
-export const collections = { blog, labs, projects, ctfDays };
+export const collections = { blog, labs, writeupSources, projects, ctfDays };

@@ -1,19 +1,36 @@
+@font-face {
+  font-family: 'Hacked';
+  src: url('/fonts/HACKED.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/SpaceGrotesk-Variable.ttf') format('truetype-variations');
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+
 :root {
-  --color-bg: #080c11;
-  --color-surface: #10151c;
-  --color-surface-elevated: #171d26;
-  --color-border: #242c36;
-  --color-border-strong: #3b4a5b;
-  --color-text: #c3c8d0;
-  --color-text-muted: #9098a3;
-  --color-text-faint: #69727e;
-  --color-text-heading: #f0f2f5;
-  --color-accent: #82bfff;
-  --color-accent-dim: #5c97d2;
-  --color-success: #6bb56a;
-  --color-warning: #d4a047;
+  --color-bg: #000;
+  --color-surface: #080808;
+  --color-surface-elevated: #111;
+  --color-border: #272727;
+  --color-border-strong: #575757;
+  --color-text: #dedede;
+  --color-text-muted: #aaa;
+  --color-text-faint: #777;
+  --color-text-heading: #fff;
+  --color-accent: #fff;
+  --color-accent-dim: #bdbdbd;
+  --color-success: #fff;
+  --color-warning: #d8d8d8;
   
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Hacked', 'Space Grotesk', sans-serif;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   
   --spacing-unit: 8px;
@@ -42,9 +59,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(38, 55, 72, 0.08), transparent 40rem),
-    var(--color-bg);
+  background: transparent;
+  isolation: isolate;
+}
+
+body > main,
+body > footer {
+  position: relative;
+  z-index: 1;
 }
 
 main {
@@ -70,13 +92,20 @@ body.is-home {
 
 h1, h2, h3, h4 {
   color: var(--color-text-heading);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 400;
   line-height: 1.2;
+  letter-spacing: 0.035em;
 }
 
 h1 {
   font-size: 2rem;
   margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.listing-title {
+  padding-left: 6px;
+  margin-bottom: calc(var(--spacing-unit) * 3);
 }
 
 h2 {
@@ -191,7 +220,7 @@ hr {
 .tag:focus-visible {
   color: var(--color-text-heading);
   border-color: var(--color-accent);
-  background: rgba(74, 158, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .badge {
@@ -206,33 +235,33 @@ hr {
 }
 
 .badge.complete {
-  background: rgba(107, 181, 106, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--color-success);
-  border: 1px solid rgba(107, 181, 106, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .badge.in-progress {
-  background: rgba(212, 160, 71, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--color-warning);
-  border: 1px solid rgba(212, 160, 71, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .badge.planned {
-  background: rgba(74, 158, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--color-accent);
-  border: 1px solid rgba(74, 158, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .badge.active {
-  background: rgba(212, 160, 71, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--color-warning);
-  border: 1px solid rgba(212, 160, 71, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .badge.archived {
-  background: rgba(148, 163, 184, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text-muted);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 @media (max-width: 768px) {

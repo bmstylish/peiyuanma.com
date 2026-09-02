@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
-import TagLink from '@/components/TagLink.astro';
+import TagFilter from '@/components/TagFilter.astro';
 import { projectPath } from '@/utils/routes';
 
 const allProjects = await getCollection('projects');
@@ -16,16 +16,9 @@ const allTags = [...new Set(projects.flatMap((project) => project.data.tags).map
   title="Projects • Peiyuan Ma"
   description="Projects I've built while learning cybersecurity and infrastructure."
 >
-  <h1>Projects</h1>
-  <p class="page-intro">
-    A mix of shipped work and in-progress builds. I keep these honest: what I built,
-    why I built it, and what I learned.
-  </p>
+  <h1 class="listing-title">Projects</h1>
 
-  <div class="tags-filter" aria-label="Project tags">
-    <span class="filter-label">Tags:</span>
-    {allTags.map((tag) => <TagLink tag={tag} />)}
-  </div>
+  <TagFilter tags={allTags} label="Project tags" />
 
   <div class="projects-grid">
     {projects.map((project) => (
@@ -45,35 +38,10 @@ const allTags = [...new Set(projects.flatMap((project) => project.data.tags).map
 </BaseLayout>
 
 <style>
-  .page-intro {
-    font-size: 1.0625rem;
-    color: var(--color-text-muted);
-    margin-bottom: calc(var(--spacing-unit) * 6);
-  }
-
   .projects-grid {
     display: flex;
     flex-direction: column;
     gap: calc(var(--spacing-unit) * 4);
   }
 
-  .tags-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 1);
-    margin-bottom: calc(var(--spacing-unit) * 6);
-    padding: calc(var(--spacing-unit) * 3);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-  }
-
-  .filter-label {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
 </style>

@@ -1,0 +1,338 @@
+---
+import TagLink from '@/components/TagLink.astro';
+
+interface Props {
+  tags: string[];
+  label?: string;
+}
+
+const { tags, label = 'Content tags' } = Astro.props;
+const tagLabels = new Map<string, string>();
+
+for (const tag of tags) {
+  const normalized = tag.trim();
+  const key = normalized.toLocaleLowerCase();
+
+  if (normalized && !tagLabels.has(key)) {
+    tagLabels.set(key, normalized);
+  }
+}
+
+const sortedTags = [...tagLabels.values()].sort((a, b) =>
+  a.localeCompare(b, undefined, { sensitivity: 'base' })
+);
+const filterId = `tag-filter-${label.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+{sortedTags.length > 0 && (
+  <section class="tag-filter" data-tag-filter aria-label={label}>
+    <div class="tag-filter__header">
+      <span class="tag-filter__label">Tags:</span>
+
+      <label class="tag-filter__search" for={`${filterId}-search`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6"></circle>
+          <path d="m16 16 4 4"></path>
+        </svg>
+        <span class="sr-only">Search tags</span>
+        <input
+          id={`${filterId}-search`}
+          data-tag-search
+          type="search"
+          placeholder="Search tags"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </label>
+    </div>
+
+    <div class="tag-filter__viewport" id={`${filterId}-tags`} data-tag-viewport>
+      <div class="tag-filter__list" data-tag-list>
+        {sortedTags.map((tag) => (
+          <span class="tag-filter__item" data-tag-item data-tag-value={tag.toLocaleLowerCase()}>
+            <TagLink tag={tag} />
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <div class="tag-filter__footer">
+      <span class="tag-filter__empty" data-tag-empty aria-live="polite" hidden>No matching tags.</span>
+      <button
+        class="tag-filter__toggle"
+        data-tag-toggle
+        type="button"
+        aria-controls={`${filterId}-tags`}
+        aria-expanded="false"
+        hidden
+      >
+        <span data-tag-toggle-label>Show all tags</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m7 9 5 5 5-5"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+)}
+
+<script>
+  const initializeTagFilters = () => {
+    const filters = document.querySelectorAll<HTMLElement>('[data-tag-filter]:not([data-tag-filter-ready])');
+
+    filters.forEach((filter) => {
+      filter.dataset.tagFilterReady = 'true';
+
+      const input = filter.querySelector<HTMLInputElement>('[data-tag-search]');
+      const viewport = filter.querySelector<HTMLElement>('[data-tag-viewport]');
+      const list = filter.querySelector<HTMLElement>('[data-tag-list]');
+      const items = [...filter.querySelectorAll<HTMLElement>('[data-tag-item]')];
+      const toggle = filter.querySelector<HTMLButtonElement>('[data-tag-toggle]');
+      const toggleLabel = filter.querySelector<HTMLElement>('[data-tag-toggle-label]');
+      const empty = filter.querySelector<HTMLElement>('[data-tag-empty]');
+
+      if (!input || !viewport || !list || !toggle || !toggleLabel || !empty) return;
+
+      let expanded = false;
+      let resizeFrame = 0;
+
+      const updateToggle = () => {
+        const visibleItems = items.filter((item) => !item.hidden);
+        const searching = input.value.trim().length > 0;
+        const rowOffsets = [...new Set(visibleItems.map((item) => item.offsetTop))].sort((a, b) => a - b);
+        const canCollapse = !searching && rowOffsets.length > 2;
+
+        empty.hidden = visibleItems.length > 0;
+        toggle.hidden = !canCollapse;
+        toggle.setAttribute('aria-expanded', String(expanded && canCollapse));
+        toggleLabel.textContent = expanded && canCollapse ? 'Show fewer tags' : 'Show all tags';
+        filter.classList.toggle('is-expanded', expanded && canCollapse);
+
+        if (canCollapse && !expanded) {
+          const secondRowTop = rowOffsets[1];
+          const listTop = list.getBoundingClientRect().top;
+          const secondRowBottom = Math.ceil(Math.max(
+            ...visibleItems
+              .filter((item) => item.offsetTop === secondRowTop)
+              .map((item) => item.getBoundingClientRect().bottom)
+          ) - listTop);
+          viewport.style.maxHeight = `${secondRowBottom}px`;
+          return;
+        }
+
+        viewport.style.maxHeight = `${list.scrollHeight}px`;
+      };
+
+      input.addEventListener('input', () => {
+        const query = input.value.trim().toLocaleLowerCase();
+
+        items.forEach((item) => {
+          item.hidden = !item.dataset.tagValue?.includes(query);
+        });
+
+        updateToggle();
+      });
+
+      toggle.addEventListener('click', () => {
+        expanded = !expanded;
+        updateToggle();
+      });
+
+      const handleResize = () => {
+        window.cancelAnimationFrame(resizeFrame);
+        resizeFrame = window.requestAnimationFrame(updateToggle);
+      };
+
+      window.addEventListener('resize', handleResize, { passive: true });
+      document.fonts?.ready.then(updateToggle);
+      updateToggle();
+    });
+  };
+
+  initializeTagFilters();
+  document.addEventListener('astro:page-load', initializeTagFilters);
+</script>
+
+<style>
+  .tag-filter {
+    margin-bottom: calc(var(--spacing-unit) * 6);
+    padding: calc(var(--spacing-unit) * 3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .tag-filter__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+
+  .tag-filter__label {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-filter__search {
+    display: flex;
+    width: min(15rem, 100%);
+    align-items: center;
+    gap: var(--spacing-unit);
+    padding: calc(var(--spacing-unit) * 0.75) var(--spacing-unit);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text-faint);
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+
+  .tag-filter__search:focus-within {
+    border-color: var(--color-text-heading);
+    color: var(--color-text-heading);
+  }
+
+  .tag-filter__search svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-width: 1.5;
+  }
+
+  .tag-filter__search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--color-text-heading);
+    font: 0.8rem/1.4 var(--font-sans);
+  }
+
+  .tag-filter__search input::placeholder {
+    color: var(--color-text-faint);
+  }
+
+  .tag-filter__search input::-webkit-search-cancel-button {
+    filter: grayscale(1) invert(1);
+  }
+
+  .tag-filter__viewport {
+    overflow: hidden;
+    transition: max-height 220ms ease;
+  }
+
+  .tag-filter__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--spacing-unit);
+  }
+
+  .tag-filter__item {
+    display: inline-flex;
+  }
+
+  .tag-filter__item[hidden] {
+    display: none;
+  }
+
+  .tag-filter__item :global(.tag) {
+    margin: 0;
+  }
+
+  .tag-filter__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tag-filter__empty,
+  .tag-filter__toggle {
+    margin-top: calc(var(--spacing-unit) * 1.5);
+    color: var(--color-text-faint);
+    font: 600 0.7rem/1.4 var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tag-filter__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 0.5);
+    margin-left: auto;
+    padding: calc(var(--spacing-unit) * 0.5) 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: color 180ms ease;
+  }
+
+  .tag-filter__toggle[hidden] {
+    display: none;
+  }
+
+  .tag-filter__toggle:hover,
+  .tag-filter__toggle:focus-visible {
+    color: var(--color-text-heading);
+  }
+
+  .tag-filter__toggle:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .tag-filter__toggle svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 1.5;
+    transition: transform 180ms ease;
+  }
+
+  .is-expanded .tag-filter__toggle svg {
+    transform: rotate(180deg);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 560px) {
+    .tag-filter {
+      padding: calc(var(--spacing-unit) * 2);
+    }
+
+    .tag-filter__header {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .tag-filter__search {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-filter__viewport,
+    .tag-filter__toggle svg {
+      transition: none;
+    }
+  }
+</style>

@@ -1,37 +1,174 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import NavigationIcon from '@/components/NavigationIcon.astro';
 ---
 
 <BaseLayout
   title="Peiyuan Ma • Cybersecurity Portfolio"
-  description="Cybersecurity student portfolio: projects, labs, and technical writing."
+  description="Cybersecurity student portfolio: projects, writeups, and technical writing."
 >
+  <script is:inline>
+    (() => {
+      const root = document.documentElement;
+      const sessionKey = 'peiyuan-home-intro-seen';
+
+      try {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const hasPlayed = window.sessionStorage.getItem(sessionKey) === 'true';
+
+        if (!reduceMotion && !hasPlayed) {
+          root.dataset.homeIntro = 'play';
+          window.sessionStorage.setItem(sessionKey, 'true');
+          return;
+        }
+      } catch {
+        // If session storage is unavailable, avoid replaying an untracked intro.
+      }
+
+      root.dataset.homeIntro = 'skip';
+    })();
+  </script>
+
   <section class="hero" aria-labelledby="home-title">
     <div class="hero-content">
-      <p class="hello">hi, i’m</p>
-      <h1 id="home-title">Peiyuan <span>(Bobby)</span> Ma</h1>
-      <p class="lead">
-        Cybersecurity student building practical projects,<br class="desktop-break" />
-        running labs, and documenting what I learn.
-      </p>
-      <p class="prompt" aria-hidden="true">&gt;_</p>
+      <div class="hero-copy">
+        <p class="hello">hi, i’m</p>
+        <h1 id="home-title">Peiyuan Ma</h1>
+        <p class="lead">
+          cybersecurity student building practical projects<br class="desktop-break" />
+          running labs, and documenting what i learn
+        </p>
+        <div class="prompt-row">
+          <p class="prompt" aria-hidden="true">&gt;<span class="prompt-cursor">_</span></p>
+          <button class="intro-replay" type="button">Test effect</button>
+        </div>
+      </div>
 
       <nav class="hero-links" aria-label="Explore my work">
         <a href="/projects/">
+          <NavigationIcon name="projects" size="hero" />
           <span>Projects</span>
-          <span class="arrow" aria-hidden="true">→</span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h13M13 7l5 5-5 5"></path>
+          </svg>
         </a>
-        <a href="/labs/">
+        <a href="/writeups/">
+          <NavigationIcon name="writeups" size="hero" />
           <span>Writeups</span>
-          <span class="arrow" aria-hidden="true">→</span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h13M13 7l5 5-5 5"></path>
+          </svg>
         </a>
         <a href="/blog/">
+          <NavigationIcon name="blog" size="hero" />
           <span>Blog</span>
-          <span class="arrow" aria-hidden="true">→</span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h13M13 7l5 5-5 5"></path>
+          </svg>
         </a>
       </nav>
     </div>
   </section>
+
+  <script>
+    import { glitchTransition } from '@/scripts/glitchTransition';
+
+    const root = document.documentElement;
+    const hero = document.querySelector('.hero-content');
+    const title = document.querySelector('#home-title');
+    const lead = document.querySelector('.lead');
+    const replayButton = document.querySelector('.intro-replay');
+
+    const titleText = title?.textContent?.trim() ?? '';
+    const leadMarkup = lead?.innerHTML ?? '';
+    const leadParts = lead
+      ? [...lead.childNodes].flatMap((node) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const value = node.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+            return value ? [{ type: 'text', value }] : [];
+          }
+
+          if (node instanceof HTMLBRElement) {
+            return [{ type: 'break', className: node.className }];
+          }
+
+          return [];
+        })
+      : [];
+    let isPlaying = false;
+
+    const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
+
+    const typeText = async (element, text, delay) => {
+      element.textContent = '';
+      element.classList.add('is-typing');
+
+      for (const character of text) {
+        element.textContent += character;
+        await wait(delay);
+      }
+
+      element.classList.remove('is-typing');
+    };
+
+    const typeRichText = async (element, parts, delay) => {
+      element.textContent = '';
+      element.classList.add('is-typing');
+
+      for (const part of parts) {
+        if (part.type === 'break') {
+          const lineBreak = document.createElement('br');
+          lineBreak.className = part.className;
+          element.append(lineBreak, document.createTextNode(' '));
+          continue;
+        }
+
+        const textNode = document.createTextNode('');
+        element.append(textNode);
+
+        for (const character of part.value) {
+          textNode.data += character;
+          await wait(delay);
+        }
+      }
+
+      element.classList.remove('is-typing');
+    };
+
+    const playIntro = async () => {
+      if (root.dataset.homeIntro !== 'play' || !hero || !title || !lead || isPlaying) return;
+
+      isPlaying = true;
+      if (replayButton instanceof HTMLButtonElement) replayButton.disabled = true;
+      title.textContent = '';
+      lead.textContent = '';
+      await wait(220);
+
+      await typeText(title, titleText, 48);
+      await wait(120);
+      await typeRichText(lead, leadParts, 16);
+      await wait(180);
+
+      lead.innerHTML = leadMarkup;
+      await glitchTransition(title, titleText, {
+        duration: 720,
+        resolveAt: 0.58,
+        onResolve: () => {
+          root.dataset.homeIntro = 'reveal';
+        },
+      });
+      root.dataset.homeIntro = 'complete';
+      isPlaying = false;
+      if (replayButton instanceof HTMLButtonElement) replayButton.disabled = false;
+    };
+
+    replayButton?.addEventListener('click', () => {
+      root.dataset.homeIntro = 'play';
+      void playIntro();
+    });
+
+    void playIntro();
+  </script>
 </BaseLayout>
 
 <style>
@@ -41,33 +178,46 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     min-height: 0;
     display: grid;
     align-items: center;
-    padding: 2rem var(--page-gutter);
+    padding: 1.5rem var(--page-gutter);
+    font-family: var(--font-display);
   }
 
   .hero-content {
+    position: relative;
     width: min(100%, 1010px);
     margin-inline: auto;
   }
 
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
   .hello,
-  .prompt {
-    font-family: var(--font-mono);
+  .lead {
+    color: var(--color-accent);
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    text-transform: lowercase;
   }
 
   .hello {
-    margin: 0 0 1.45rem;
-    color: var(--color-accent);
-    font-size: clamp(0.95rem, 1.25vw, 1.15rem);
-    letter-spacing: 0.04em;
+    margin: 0 0 1.2rem;
   }
 
   h1 {
-    max-width: 980px;
+    position: relative;
+    max-width: 1000px;
+    width: fit-content;
+    min-height: 0.93em;
     margin: 0;
-    font-size: clamp(3.1rem, 6.4vw, 6.25rem);
+    font-size: clamp(3.2rem, 6.8vw, 6.7rem);
+    font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.055em;
-    line-height: 0.98;
+    letter-spacing: 0.025em;
+    line-height: 0.93;
   }
 
   h1 span {
@@ -75,41 +225,81 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
 
   .lead {
-    margin: clamp(2rem, 4.5vh, 3.25rem) 0 0;
-    color: var(--color-text);
-    font-size: clamp(1.05rem, 1.7vw, 1.45rem);
-    line-height: 1.58;
+    min-height: 3.44em;
+    margin: clamp(1.7rem, 3.5vh, 2.7rem) 0 0;
+  }
+
+  .prompt-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 1.65rem;
   }
 
   .prompt {
-    margin: 2.15rem 0 0;
+    margin: 0;
     color: var(--color-accent);
     font-size: 1.05rem;
   }
 
+  .prompt-cursor {
+    animation: cursor-blink 620ms steps(1, end) infinite;
+  }
+
+  .intro-replay {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    color: var(--color-text-faint);
+    font: 400 0.72rem/1.2 var(--font-display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 180ms ease, border-color 180ms ease, opacity 180ms ease;
+  }
+
+  .intro-replay:hover,
+  .intro-replay:focus-visible {
+    border-color: currentColor;
+    color: var(--color-text-heading);
+  }
+
+  .intro-replay:disabled {
+    cursor: default;
+  }
+
   .hero-links {
     display: grid;
-    grid-template-columns: repeat(3, minmax(150px, 190px));
-    gap: clamp(2.5rem, 7vw, 6rem);
-    margin-top: clamp(3.25rem, 7vh, 5rem);
+    grid-template-columns: repeat(3, minmax(220px, 260px));
+    gap: clamp(1.75rem, 4vw, 4rem);
+    margin-top: clamp(2rem, 4.5vh, 3.5rem);
+    transition: opacity 260ms ease, transform 340ms ease, visibility 0s;
   }
 
   .hero-links a {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 0 0.8rem;
+    gap: 0.85rem;
+    padding: 0 0 0.55rem;
     border-bottom: 1px solid var(--color-border-strong);
     color: var(--color-text-heading);
-    font-size: clamp(1.3rem, 2vw, 1.75rem);
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    letter-spacing: 0.055em;
     line-height: 1;
     transition: border-color 180ms ease, color 180ms ease;
   }
 
   .hero-links .arrow {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: auto;
     color: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: 1.35rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 1.4;
     transition: transform 180ms ease;
   }
 
@@ -124,15 +314,166 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     transform: translateX(0.35rem);
   }
 
+  :global(html[data-home-intro='play']) .hero,
+  :global(html[data-home-intro='play']) h1 {
+    font-family: var(--font-sans);
+  }
+
+  :global(html[data-home-intro='play']) .hero-links,
+  :global(html[data-home-intro='reveal']) .hero-links {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(0.8rem);
+  }
+
+  :global(html[data-home-intro='play']) .prompt,
+  :global(html[data-home-intro='reveal']) .prompt {
+    opacity: 0;
+  }
+
+  :global(html[data-home-intro='play']) .intro-replay,
+  :global(html[data-home-intro='reveal']) .intro-replay {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  :global(html[data-home-intro='complete']) .prompt {
+    animation: prompt-reveal 260ms ease both;
+  }
+
+  :global(html[data-home-intro='complete']) .hero-links a {
+    animation: link-reveal 420ms ease both;
+  }
+
+  .is-typing::after {
+    display: inline-block;
+    width: 0.08em;
+    height: 0.82em;
+    margin-left: 0.12em;
+    background: currentColor;
+    content: '';
+    vertical-align: -0.08em;
+    animation: cursor-blink 620ms steps(1, end) infinite;
+  }
+
+  :global(.glitch-transition) {
+    position: relative;
+    isolation: isolate;
+  }
+
+  :global(.glitch-transition__base),
+  :global(.glitch-transition__rgb),
+  :global(.glitch-transition__slice) {
+    display: block;
+    white-space: pre;
+  }
+
+  :global(.glitch-transition__base) {
+    position: relative;
+    z-index: 2;
+  }
+
+  :global(.glitch-transition__rgb),
+  :global(.glitch-transition__slice) {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  :global(.glitch-transition__rgb) {
+    z-index: 1;
+    opacity: 0;
+    mix-blend-mode: screen;
+  }
+
+  :global(.glitch-transition__rgb--cyan) {
+    color: #00eaff;
+    animation: glitch-rgb-cyan var(--glitch-duration) steps(1, end) both;
+  }
+
+  :global(.glitch-transition__rgb--magenta) {
+    color: #ff2a9d;
+    animation: glitch-rgb-magenta var(--glitch-duration) steps(1, end) both;
+  }
+
+  :global(.glitch-transition__slice) {
+    z-index: 3;
+    animation: glitch-slice-tear var(--glitch-duration) steps(1, end) both;
+  }
+
+  :global(.glitch-transition__slice--channel-0) {
+    color: var(--color-text-heading);
+  }
+
+  :global(.glitch-transition__slice--channel-1) {
+    color: #00eaff;
+  }
+
+  :global(.glitch-transition__slice--channel-2) {
+    color: #ff2a9d;
+  }
+
+  @keyframes cursor-blink {
+    0%, 48% { opacity: 1; }
+    49%, 100% { opacity: 0; }
+  }
+
+  @keyframes glitch-rgb-cyan {
+    0%, 8%, 100% { opacity: 0; transform: translateX(0); }
+    14% { opacity: 0.45; transform: translateX(-2px); }
+    24% { opacity: 0.65; transform: translateX(3px); }
+    37% { opacity: 0.75; transform: translateX(-6px); }
+    49% { opacity: 0.58; transform: translateX(4px); }
+    63% { opacity: 0.72; transform: translateX(-3px); }
+    78% { opacity: 0.38; transform: translateX(2px); }
+    90% { opacity: 0; transform: translateX(0); }
+  }
+
+  @keyframes glitch-rgb-magenta {
+    0%, 8%, 100% { opacity: 0; transform: translateX(0); }
+    14% { opacity: 0.45; transform: translateX(2px); }
+    24% { opacity: 0.65; transform: translateX(-3px); }
+    37% { opacity: 0.75; transform: translateX(6px); }
+    49% { opacity: 0.58; transform: translateX(-4px); }
+    63% { opacity: 0.72; transform: translateX(3px); }
+    78% { opacity: 0.38; transform: translateX(-2px); }
+    90% { opacity: 0; transform: translateX(0); }
+  }
+
+  @keyframes glitch-slice-tear {
+    0%, 10%, 100% { opacity: 0; transform: translateX(0); }
+    16% { opacity: 0.5; transform: translateX(var(--tear-b)); }
+    23% { opacity: 0.78; transform: translateX(var(--tear-a)); }
+    30% { opacity: 0.42; transform: translateX(0); }
+    38% { opacity: 0.92; transform: translateX(var(--tear-b)); }
+    47% { opacity: 0.72; transform: translateX(var(--tear-a)); }
+    56% { opacity: 0.45; transform: translateX(0); }
+    66% { opacity: 0.85; transform: translateX(var(--tear-a)); }
+    76% { opacity: 0.55; transform: translateX(var(--tear-b)); }
+    86% { opacity: 0.28; transform: translateX(1px); }
+    93% { opacity: 0; transform: translateX(0); }
+  }
+
+  @keyframes prompt-reveal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes link-reveal {
+    from { opacity: 0; transform: translateY(0.7rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   @media (max-width: 760px) {
     .hero {
-      align-items: center;
-      padding-block: 1.5rem;
+      padding-block: 1rem;
     }
 
     h1 {
-      font-size: clamp(2.65rem, 13vw, 4.4rem);
-      line-height: 1.01;
+      min-height: 1.9em;
+      font-size: clamp(2.85rem, 13.5vw, 4.6rem);
+      line-height: 0.95;
     }
 
     .desktop-break {
@@ -140,48 +481,49 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     }
 
     .hello {
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .lead {
-      margin-top: 1.75rem;
-      line-height: 1.48;
+      min-height: 4.65em;
+      margin-top: 1.35rem;
     }
 
     .prompt {
-      margin-top: 1.65rem;
+      margin-top: 0;
+    }
+
+    .prompt-row {
+      margin-top: 1.2rem;
     }
 
     .hero-links {
       grid-template-columns: 1fr;
-      gap: 0.8rem;
-      width: min(100%, 250px);
-      margin-top: 2.25rem;
+      gap: 0.55rem;
+      width: min(100%, 300px);
+      margin-top: 1.55rem;
     }
 
     .hero-links a {
-      padding-bottom: 0.6rem;
-      font-size: 1.2rem;
+      padding-bottom: 0.35rem;
+      font-size: 1.16rem;
     }
   }
 
   @media (max-height: 720px) and (min-width: 761px) {
-    .hello {
-      margin-bottom: 1rem;
-    }
-
-    .lead,
-    .prompt {
-      margin-top: 1.4rem;
-    }
-
-    .hero-links {
-      margin-top: 2.25rem;
-    }
+    .hello { margin-bottom: 0.75rem; }
+    .lead, .prompt-row { margin-top: 1rem; }
+    .hero-links { margin-top: 1.5rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-links .arrow {
+    .hero-links,
+    .hero-links a,
+    .hero-links .arrow,
+    .prompt,
+    .prompt-cursor,
+    .intro-replay {
+      animation: none !important;
       transition: none;
     }
   }

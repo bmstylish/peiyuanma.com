@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogPostCard from '@/components/BlogPostCard.astro';
-import TagLink from '@/components/TagLink.astro';
+import TagFilter from '@/components/TagFilter.astro';
 import {
   BLOG_CATEGORIES,
   BLOG_CATEGORY_KEYS,
@@ -27,11 +27,7 @@ const categories = BLOG_CATEGORY_KEYS.map((key) => ({
   title="Blog • Peiyuan Ma"
   description="Technical writeups, security analysis, and research notes"
 >
-  <h1>Blog</h1>
-  <p class="page-intro">
-    Technical writeups, incident analysis, and security research notes. 
-    Focused on practical defensive security and detection engineering.
-  </p>
+  <h1 class="listing-title">Blog</h1>
 
   <nav class="category-grid" aria-label="Blog categories">
     {categories.map((category) => (
@@ -43,12 +39,7 @@ const categories = BLOG_CATEGORY_KEYS.map((key) => ({
     ))}
   </nav>
 
-  <div class="tags-filter">
-    <span class="filter-label">Tags:</span>
-    {allTags.map(tag => (
-      <TagLink tag={tag} />
-    ))}
-  </div>
+  <TagFilter tags={allTags} label="Blog tags" />
 
   <div class="posts-list">
     {posts.map(post => (
@@ -65,12 +56,6 @@ const categories = BLOG_CATEGORY_KEYS.map((key) => ({
 </BaseLayout>
 
 <style>
-  .page-intro {
-    font-size: 1.0625rem;
-    color: var(--color-text-muted);
-    margin-bottom: calc(var(--spacing-unit) * 4);
-  }
-
   .category-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -106,26 +91,6 @@ const categories = BLOG_CATEGORY_KEYS.map((key) => ({
     grid-column: 1 / -1;
     margin: 0;
     font-size: 0.9rem;
-  }
-  
-  .tags-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 1);
-    margin-bottom: calc(var(--spacing-unit) * 6);
-    padding: calc(var(--spacing-unit) * 3);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-  }
-  
-  .filter-label {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
   
   .posts-list {

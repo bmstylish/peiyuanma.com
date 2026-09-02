@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TagFilter from '@/components/TagFilter.astro';
+import { sourceSlug, writeupSourcePath } from '@/utils/routes';
+
+const [allSources, allLabs] = await Promise.all([
+  getCollection('writeupSources'),
+  getCollection('labs'),
+]);
+
+const labs = allLabs.filter((lab) => !lab.data.draft);
+const allTags = labs.flatMap((lab) => lab.data.tags);
+const sources = allSources
+  .filter((source) => !source.data.draft)
+  .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name))
+  .map((source) => {
+    const id = sourceSlug(source.id);
+
+    return {
+      id,
+      name: source.data.name,
+      challengeCount: labs.filter((lab) => lab.data.source === id).length,
+    };
+  });
+
+const challengeCountLabel = (count: number) =>
+  `${count} ${count === 1 ? 'challenge' : 'challenges'}`;
+---
+
+<BaseLayout title="Writeups • Peiyuan Ma" description="Cybersecurity challenge writeups by source">
+  <h1 class="listing-title">Writeups</h1>
+
+  <TagFilter tags={allTags} label="Writeup tags" />
+
+  <nav class="source-list" aria-label="Writeup sources">
+    {sources.map((source) => (
+      <a href={writeupSourcePath(source.id)}>
+        <span class="source-name">{source.name}</span>
+        <span class="source-link-meta">
+          <small>{challengeCountLabel(source.challengeCount)}</small>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h13M13 7l5 5-5 5"></path>
+          </svg>
+        </span>
+      </a>
+    ))}
+  </nav>
+</BaseLayout>
+
+<style>
+  .source-list {
+    display: grid;
+    border-top: 1px solid var(--color-border-strong);
+  }
+
+  .source-list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--spacing-unit) * 3);
+    padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 2);
+    border-bottom: 1px solid var(--color-border-strong);
+    color: var(--color-text-heading);
+    transition: background 180ms ease, padding 180ms ease;
+  }
+
+  .source-list a:hover,
+  .source-list a:focus-visible {
+    padding-left: calc(var(--spacing-unit) * 3);
+    background: var(--color-surface);
+  }
+
+  .source-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+    letter-spacing: 0.045em;
+  }
+
+  .source-link-meta {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+
+  .source-link-meta small {
+    color: var(--color-text-faint);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+  }
+
+  .source-link-meta svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 1.4;
+    transition: transform 180ms ease;
+  }
+
+  .source-list a:hover svg,
+  .source-list a:focus-visible svg {
+    transform: translateX(0.3rem);
+  }
+
+  @media (max-width: 520px) {
+    .source-list a {
+      padding-inline: calc(var(--spacing-unit) * 1);
+    }
+
+    .source-list a:hover,
+    .source-list a:focus-visible {
+      padding-left: calc(var(--spacing-unit) * 2);
+    }
+
+    .source-link-meta small {
+      display: none;
+    }
+  }
+</style>

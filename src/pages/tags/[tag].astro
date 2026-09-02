@@ -5,7 +5,7 @@ import BlogPostCard from '@/components/BlogPostCard.astro';
 import LabCard from '@/components/LabCard.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 import { tagSlug } from '@/utils/tags';
-import { blogPostPath, labPath, projectPath } from '@/utils/routes';
+import { blogPostPath, projectPath, writeupPath } from '@/utils/routes';
 
 export async function getStaticPaths() {
   const [posts, labs, projects] = await Promise.all([
@@ -82,7 +82,7 @@ const resultCount = posts.length + labs.length + projects.length;
 
   {labs.length > 0 && (
     <section>
-      <h2>Labs</h2>
+      <h2>Writeups</h2>
       <div class="results-list">
         {labs.map((lab) => (
           <LabCard
@@ -91,7 +91,7 @@ const resultCount = posts.length + labs.length + projects.length;
             tags={lab.data.tags}
             status={lab.data.status}
             description={lab.data.description}
-            href={labPath(lab.data.title)}
+            href={writeupPath(lab.data.source, lab.data.title)}
           />
         ))}
       </div>

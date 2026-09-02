@@ -70,9 +70,9 @@ function statusClass(s: Props["status"]) {
 
   .lab-header {
     display: flex;
-    flex-direction: space-between;
+    justify-content: space-between;
     gap: calc(var(--spacing-unit) * 1);
-    align-items: center;
+    align-items: flex-start;
   }
 
   .lab-header h3 {
@@ -87,6 +87,7 @@ function statusClass(s: Props["status"]) {
 
   .lab-meta {
     display: flex;
+    flex: none;
     align-items: center;
     gap: calc(var(--spacing-unit) * 2);
   }

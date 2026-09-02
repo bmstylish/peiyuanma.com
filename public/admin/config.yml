@@ -37,14 +37,50 @@ collections:
       - { label: "Tags", name: "tags", widget: "list", default: [] }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - { label: "Body", name: "body", widget: "markdown" }
+  - name: "writeupSources"
+    label: "Writeup Sources"
+    label_singular: "Writeup Source"
+    folder: "src/content/writeup-sources"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: "name"
+    preview_path: "writeups/{{slug}}"
+    sortable_fields: ["order", "name", "type"]
+    summary: "{{name}} — {{type}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string", hint: "Examples: picoCTF, Hack The Box, BSides Las Vegas 2027" }
+      - label: "Source Type"
+        name: "type"
+        widget: "select"
+        options:
+          - { label: "Challenge Platform", value: "platform" }
+          - { label: "Event / Conference", value: "event" }
+          - { label: "Independent Lab", value: "independent" }
+      - { label: "Website", name: "website", widget: "string", required: false }
+      - { label: "Display Order", name: "order", widget: "number", value_type: "int", min: 0, default: 0 }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
   - name: "labs"
-    label: "Labs"
+    label: "Challenge Writeups"
+    label_singular: "Challenge Writeup"
     folder: "src/content/labs"
     create: true
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
+    preview_path: "writeups/{{source}}/{{slug}}"
+    sortable_fields: ["source", "date", "status", "title"]
+    summary: "{{source}} — {{title}} ({{status}})"
     fields:
+      - label: "Source"
+        name: "source"
+        widget: "relation"
+        collection: "writeupSources"
+        search_fields: ["name"]
+        value_field: "{{slug}}"
+        display_fields: ["name"]
+        hint: "Choose the platform, event, conference, or independent lab this challenge came from."
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }

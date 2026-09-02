@@ -60,6 +60,10 @@ export function journalDayPath(projectTitle: string, day: number, dayTitle: stri
   return `${projectPath(projectTitle)}journal/days/day-${dayNumber}-${titleSlug(dayTitle)}/`;
 }
 
-export function labPath(title: string): string {
-  return `/labs/${titleSlug(title)}/`;
+export function writeupSourcePath(source: string): string {
+  return `/writeups/${sourceSlug(source)}/`;
+}
+
+export function writeupPath(source: string, title: string): string {
+  return `${writeupSourcePath(source)}${titleSlug(title)}/`;
 }

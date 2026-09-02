@@ -1,0 +1,49 @@
+---
+interface Props {
+  name: 'projects' | 'writeups' | 'blog' | 'about';
+  size?: 'nav' | 'hero';
+}
+
+const { name, size = 'nav' } = Astro.props;
+
+const iconSources = {
+  projects: '/images/navigation/projects.png',
+  writeups: '/images/navigation/writeups.png',
+  blog: '/images/navigation/blog.png',
+  about: '/images/navigation/about.png',
+} as const;
+---
+
+<img
+  class:list={['navigation-icon', size]}
+  src={iconSources[name]}
+  alt=""
+  width="512"
+  height="512"
+  decoding="async"
+  aria-hidden="true"
+/>
+
+<style>
+  .navigation-icon {
+    display: block;
+    flex: 0 0 auto;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    object-fit: contain;
+    filter: grayscale(1) contrast(1.08);
+  }
+
+  .navigation-icon.nav {
+    --icon-size: 46px;
+  }
+
+  .navigation-icon.hero {
+    --icon-size: 62px;
+  }
+
+  @media (max-width: 620px) {
+    .navigation-icon.nav { --icon-size: 36px; }
+    .navigation-icon.hero { --icon-size: 46px; }
+  }
+</style>

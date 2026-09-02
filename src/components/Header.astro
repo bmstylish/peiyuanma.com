@@ -1,12 +1,14 @@
 ---
+import NavigationIcon from '@/components/NavigationIcon.astro';
+
 const currentPath = Astro.url.pathname;
 
 const navItems = [
-  { href: '/projects/', label: 'Projects', activePath: '/projects/' },
-  { href: '/labs/', label: 'Writeups', activePath: '/labs/' },
-  { href: '/blog/', label: 'Blog', activePath: '/blog/' },
-  { href: '/', label: 'About', activePath: '/' },
-];
+  { href: '/projects/', label: 'Projects', icon: 'projects', activePath: '/projects/' },
+  { href: '/writeups/', label: 'Writeups', icon: 'writeups', activePath: '/writeups/' },
+  { href: '/blog/', label: 'Blog', icon: 'blog', activePath: '/blog/' },
+  { href: '/', label: 'About', icon: 'about', activePath: '/' },
+] as const;
 ---
 
 <header>
@@ -16,6 +18,9 @@ const navItems = [
       {navItems.map((item) => (
         <a
           href={item.href}
+          aria-label={item.label}
+          title={item.label}
+          data-label={item.label}
           class:list={[
             'nav-link',
             {
@@ -26,7 +31,7 @@ const navItems = [
             },
           ]}
         >
-          {item.label}
+          <NavigationIcon name={item.icon} />
         </a>
       ))}
     </nav>
@@ -37,7 +42,7 @@ const navItems = [
   header {
     position: relative;
     z-index: 100;
-    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    background: transparent;
   }
 
   .header-content {
@@ -45,7 +50,7 @@ const navItems = [
     max-width: 1440px;
     min-height: 82px;
     margin: 0 auto;
-    padding: 1.4rem var(--shell-gutter);
+    padding: 1rem var(--shell-gutter);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -53,37 +58,68 @@ const navItems = [
 
   .logo {
     color: var(--color-text-heading);
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    font-weight: 600;
-    letter-spacing: 0.025em;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
   }
 
   nav {
     display: flex;
     align-items: center;
-    gap: clamp(1.65rem, 3.4vw, 3.25rem);
+    gap: clamp(0.8rem, 2vw, 1.65rem);
   }
 
   .nav-link {
     position: relative;
-    padding: 0.5rem 0;
+    display: grid;
+    place-items: center;
+    padding: 0.1rem;
     color: var(--color-text-muted);
-    font-size: 0.92rem;
-    transition: color 180ms ease;
+    filter: brightness(0.66);
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .nav-link.active {
+    filter: brightness(1);
   }
 
   .nav-link:hover,
-  .nav-link:focus-visible,
-  .nav-link.active {
-    color: var(--color-accent);
+  .nav-link:focus-visible {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+  }
+
+  .nav-link::before {
+    content: attr(data-label);
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    left: 50%;
+    z-index: 2;
+    padding: 0.28rem 0.45rem;
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg);
+    color: var(--color-text-heading);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -0.2rem);
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+
+  .nav-link:hover::before,
+  .nav-link:focus-visible::before {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 
   .nav-link.active::after {
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -0.18rem;
+    bottom: -0.28rem;
     width: 4px;
     height: 4px;
     border-radius: 50%;
@@ -94,27 +130,25 @@ const navItems = [
   @media (max-width: 620px) {
     .header-content {
       min-height: 62px;
-      padding-block: 0.8rem;
+      padding-block: 0.55rem;
     }
 
     nav {
-      gap: clamp(0.7rem, 3.2vw, 1.15rem);
+      gap: clamp(0.35rem, 1.5vw, 0.7rem);
     }
 
     .logo {
-      font-size: 0.76rem;
+      font-size: 0.82rem;
     }
 
-    .nav-link {
-      font-size: 0.73rem;
+    .nav-link::before {
+      display: none;
     }
   }
 
   @media (max-width: 365px) {
-    .header-content {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0.3rem;
+    .logo {
+      font-size: 0.72rem;
     }
   }
 </style>
