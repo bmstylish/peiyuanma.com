@@ -11,7 +11,7 @@ github: https://github.com/bmstylish/peiyuanma.com
 status: active
 lessons: "A portfolio is a product: structure and clarity matter more than fancy
   animations."
-writeup: true
+writeup: false
 order: 2
 draft: false
 ---

@@ -1,8 +1,8 @@
 ---
 title: "TryHackMe Jr Penetration Tester: Daily Learning Journal"
-description: An open-ended, day-by-day practical journal following TryHackMe's
-  Jr Penetration Tester path, with completed rooms, authorised practice, and
-  reproducible notes.
+description: A day-by-day journal of learning practical pentesting. Days 1 to
+  18 are written up, dead ends included; the rest follows TryHackMe's Jr
+  Penetration Tester path.
 date: 2026-07-01
 tags:
   - ctf
@@ -12,44 +12,59 @@ tags:
   - penetration testing
   - burp suite
 status: archived
-lessons: A structured methodology, deliberate practice, and reproducible notes
-  turn individual challenges into transferable penetration-testing skills.
+lessons: Writing down the dead ends turned out to be worth more than
+  recording the solutions.
 writeup: true
 journal: ctf-winter-break-2026
 order: 0
 draft: false
 ---
+## What this is
 
-## Project goal
+A day-by-day journal of learning practical penetration testing. Each entry records the rooms I finished, the commands that worked, and - more usefully - the things that did not.
 
-This project began as a broad 30-day CTF sprint. The first week built useful Linux, Git, networking, and problem-solving foundations through Bandit and short challenges. As the journal continued, the work naturally moved into TryHackMe rooms covering SQL injection, XSS, CSRF, IDOR, Nmap, web enumeration, web-server attacks, and Burp Suite.
+Days 1 to 18 are written up. Day 19 onward is planned but not done yet; those entries exist as checklists so I know what the next session is before I sit down to it.
 
-The journal is no longer limited to thirty days. I am continuing through the current [TryHackMe Jr Penetration Tester learning path](https://tryhackme.com/path/outline/jrpenetrationtester) one study day at a time. The goal is to connect each room to the next stage of a realistic assessment: reconnaissance, enumeration, vulnerability identification, exploitation, post-exploitation, privilege escalation, and reporting.
+## It started as something else
 
-## Why the plan changed
+The original plan was a 30-day CTF sprint over winter break: OverTheWire Bandit, then short general-skills challenges, then a branch out into web exploitation, cryptography, forensics, reverse engineering, binary exploitation, and a timed CTF at the end.
 
-- **Depth over scattered coverage:** a connected workflow is more useful for my pentesting goals than briefly sampling crypto, forensics, reversing, and binary exploitation in the same sprint.
-- **The completed work still counts:** Days 1–18 already cover prerequisites and shared rooms, so restarting would discard useful progress instead of building on it.
-- **Every room now has an output:** each future day pairs TryHackMe rooms with a practical artifact such as an attack-surface map, request comparison, scan triage table, exploitation log, or report finding.
-- **Progress is not tied to an arbitrary deadline:** the path is large enough that rushing to finish by Day 30 would reduce the time available for repetition, troubleshooting, and useful documentation.
-- **The journal can grow with the path:** Day 31 and later entries will appear as I continue into Windows, Active Directory, Python, specialised-domain, reporting, and capstone rooms.
+The first week did its job. Bandit forced daily Linux and Git practice, and getting the journal format right mattered more than the flags did.
 
-## Daily format
+By Day 18 the plan and the journal had stopped agreeing. What I was actually doing was SQL injection, XSS, CSRF, IDOR, Nmap, content discovery, web-server attacks and my first Burp Suite sessions - nearly all of which belongs to TryHackMe's Jr Penetration Tester path. The schedule still said I should context-switch into reverse engineering next.
 
-Most sessions are designed for **90–150 minutes**, depending on room length:
+So I changed the plan instead of the work.
 
-- 45–90 minutes completing the primary TryHackMe room or rooms
-- 30–45 minutes repeating the technique on the room's authorised lab target
-- 15 minutes recording evidence, commands, failed attempts, and remediation notes
-- An optional stretch room only when the primary work and journal entry are complete
+## Why a path instead of scattered CTF
 
-### Ongoing milestones
+CTF challenges are still worth doing. They teach persistence and how to work with incomplete information. My problem was not the challenges, it was the switching cost.
 
-- Preserve every dated entry as an honest record of what I completed that day
-- A repeatable workflow from Nmap and web enumeration through exploitation and privilege escalation
-- Practical evidence for each study day, not only room-completion badges
-- Independent completion of the Recruit, Support, Checkmate, and Jump challenge rooms where time allows
-- One concise pentest-style finding with evidence, impact, remediation, and reproduction steps
-- Continue adding entries until the Jr Penetration Tester path and its capstone work are complete
+Jumping from web exploitation to classical cryptography to file forensics gives breadth. It does not give practice at joining the stages of a real assessment together: recon, enumeration, finding something, proving it, escalating, then writing it up so someone else can reproduce it. That sequence is what I want to be able to do, and it is easier to show in a portfolio than a list of flags.
 
-The sections below track the original foundation work and the ongoing TryHackMe plan. Each study day has its own page, and new weeks are added automatically as the journal grows.
+I did not go back and rewrite Days 1 to 18 to look like this was always the plan. Days 1 to 7 are the CTF and Linux foundation, Days 8 to 18 are the drift into web and network testing. The drift is the interesting part.
+
+## What actually tripped me up
+
+The dead ends are the entries I go back and reread.
+
+`nc` and `ncat` are not interchangeable. Working through SSL connections on Day 2, `nc` would not resolve `--ssl`, and I lost time before working out that I needed `ncat`.
+
+`git pull` hides branches. On Bandit 27 and 28, `git pull` was enough to get the flag. On 29 it was not - the flag was in a different branch and `git branch -a` came back empty. `git pull` is `git fetch` plus `git merge` for the current branch, so it never learns the other branches exist. Cloning first, then `git branch -a` and `git checkout dev`, did.
+
+Two machines on TryHackMe is slow. Running a target and the browser AttackBox together is painful enough that it changes how many times you are willing to retry something, which is the wrong reason to stop testing. Connecting over OpenVPN from my own machine is the better setup and I should have moved sooner.
+
+## How a day works now
+
+A room on its own is not a day's work. Each entry pairs the room with practice on its authorised lab target:
+
+- 45 to 90 minutes on the room itself
+- 30 to 45 minutes repeating the technique on the target until it is reproducible
+- 15 minutes recording commands, evidence, and the attempts that failed
+
+The last 15 minutes are the part I skip when I am tired and the part I regret skipping.
+
+Every day also has to produce something: an attack-surface map, a Repeater request comparison, a scan triage table separating confirmed findings from false positives, or an exploitation log. A Metasploit day is not finished until the module, options, payload, session evidence and cleanup steps are written down.
+
+## Where it goes
+
+Through the rest of the path: Burp workflow, SSRF, session management, file inclusion and command injection, API testing, vulnerability research, wordlists and Hydra, Metasploit and post-exploitation, Linux privilege escalation. The goal at the end is one report-quality finding with evidence, impact, reproduction steps and remediation, written the way someone else would need to read it.

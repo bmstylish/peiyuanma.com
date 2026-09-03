@@ -17,7 +17,7 @@
         x: -1000,
         y: -1000,
         energy: 0,
-        lastMove: 0,
+        inside: false,
         interactive: false,
       };
 
@@ -34,8 +34,8 @@
       const createParticle = () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: randomBetween(0.45, 1),
-        opacity: randomBetween(0.12, 0.38),
+        radius: randomBetween(0.7, 1.6),
+        opacity: randomBetween(0.22, 0.6),
         depth: randomBetween(0.35, 1),
         offsetX: 0,
         offsetY: 0,
@@ -57,9 +57,9 @@
         context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
         const mobile = width <= 768 || !finePointer.matches;
-        const density = mobile ? 30000 : 21000;
-        const minimum = mobile ? 16 : 32;
-        const maximum = mobile ? 40 : 100;
+        const density = mobile ? 22000 : 11000;
+        const minimum = mobile ? 24 : 60;
+        const maximum = mobile ? 70 : 220;
         const count = Math.max(minimum, Math.min(maximum, Math.round((width * height) / density)));
 
         particles = Array.from({ length: count }, createParticle);
@@ -68,12 +68,11 @@
       const draw = (time, delta = 16) => {
         context.clearRect(0, 0, width, height);
 
-        if (time - pointer.lastMove > 90) {
-          pointer.energy *= Math.exp(-delta / 720);
-        }
+        const targetEnergy = pointer.inside && pointer.interactive ? 1 : 0;
+        pointer.energy += (targetEnergy - pointer.energy) * (1 - Math.exp(-delta / 220));
 
-        const influenceRadius = Math.min(280, Math.max(200, width * 0.18));
-        const maximumShift = 7.5;
+        const influenceRadius = Math.min(440, Math.max(280, width * 0.28));
+        const maximumShift = 26;
         const easing = 1 - Math.exp(-delta / 170);
 
         for (const particle of particles) {
@@ -151,10 +150,13 @@
       const handlePointerMove = (event) => {
         if (event.pointerType === 'touch') return;
         pointer.interactive = true;
+        pointer.inside = true;
         pointer.x = event.clientX;
         pointer.y = event.clientY;
-        pointer.energy = 1;
-        pointer.lastMove = performance.now();
+      };
+
+      const handlePointerLeave = () => {
+        pointer.inside = false;
       };
 
       const handleResize = () => {
@@ -181,6 +183,8 @@
       renderForMotionPreference();
 
       window.addEventListener('pointermove', handlePointerMove, { passive: true });
+      document.addEventListener('pointerleave', handlePointerLeave);
+      window.addEventListener('blur', handlePointerLeave);
       window.addEventListener('resize', handleResize, { passive: true });
       document.addEventListener('visibilitychange', handleVisibilityChange);
       reducedMotion.addEventListener('change', renderForMotionPreference);
@@ -189,6 +193,8 @@
       window.addEventListener('pagehide', () => {
         stopAnimation();
         window.removeEventListener('pointermove', handlePointerMove);
+        document.removeEventListener('pointerleave', handlePointerLeave);
+        window.removeEventListener('blur', handlePointerLeave);
         window.removeEventListener('resize', handleResize);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         reducedMotion.removeEventListener('change', renderForMotionPreference);

@@ -24,16 +24,13 @@ const formattedDate = date.toLocaleDateString('en-US', {
 <article class="project-card">
   <div class="project-header">
     <h3>{title}</h3>
-    <div class="project-header-meta">
-      <time datetime={date.toISOString()}>{formattedDate}</time>
-      <span class:list={['badge', status]}>{status}</span>
-    </div>
   </div>
-  
+
   <p class="project-description">{description}</p>
-  
-  <div class="project-tags">
-    <strong>Tags:</strong>
+
+  <div class="project-meta">
+    <time datetime={date.toISOString()}>{formattedDate}</time>
+    <span class:list={['badge', status]}>{status}</span>
     {tags.map(tag => <TagLink tag={tag} />)}
   </div>
   
@@ -46,7 +43,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
   <div class="project-links">
     {href && (
       <a href={href} class="project-link">
-        View Source →
+        Writeup →
       </a>
     )}
     {github && (
@@ -84,14 +81,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
     color: var(--color-text-heading);
   }
 
-  .project-header-meta {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 2);
-    flex-shrink: 0;
-  }
-
-  .project-header time {
+  .project-meta time {
     color: var(--color-text-muted);
     font-family: var(--font-mono);
     font-size: 0.875rem;
@@ -103,17 +93,13 @@ const formattedDate = date.toLocaleDateString('en-US', {
     margin-bottom: calc(var(--spacing-unit) * 3);
   }
   
-  .project-tags {
+  /* Mirrors .project-meta on the project detail page. */
+  .project-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: calc(var(--spacing-unit) * 1);
     margin-bottom: calc(var(--spacing-unit) * 3);
-  }
-
-  .project-tags strong {
-    color: var(--color-text-heading);
-    font-size: 0.875rem;
   }
   
   .project-lessons {

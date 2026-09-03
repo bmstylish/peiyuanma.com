@@ -19,8 +19,8 @@ const difficultyColors: Record<Props["difficulty"], string> = {
 };
 
 function statusClass(s: Props["status"]) {
-  // matches CSS badge classes
-  return s.replace("-", "");
+  // The CSS class keeps the hyphen: .badge.in-progress
+  return s;
 }
 ---
 

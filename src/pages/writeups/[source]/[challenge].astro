@@ -58,7 +58,7 @@ const formattedDate = lab.data.date.toLocaleDateString('en-US', {
         </div>
 
         <div class="post-tags">
-          <span class:list={['badge', lab.data.status.replace('-', '')]}>{lab.data.status}</span>
+          <span class:list={['badge', lab.data.status]}>{lab.data.status}</span>
           {lab.data.tags.map((tag) => <TagLink tag={tag} />)}
         </div>
       </div>

@@ -10,22 +10,19 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
   <script is:inline>
     (() => {
       const root = document.documentElement;
-      const sessionKey = 'peiyuan-home-intro-seen';
+      // Session cookie: no Expires/Max-Age, so the browser drops it on quit.
+      // Shared across tabs, so the intro plays once per browser session.
+      const cookieKey = 'peiyuan-home-intro-seen';
+      const hasFlag = () =>
+        document.cookie.split('; ').some((entry) => entry.startsWith(`${cookieKey}=`));
 
-      try {
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const hasPlayed = window.sessionStorage.getItem(sessionKey) === 'true';
-
-        if (!reduceMotion && !hasPlayed) {
-          root.dataset.homeIntro = 'play';
-          window.sessionStorage.setItem(sessionKey, 'true');
-          return;
-        }
-      } catch {
-        // If session storage is unavailable, avoid replaying an untracked intro.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || hasFlag()) {
+        root.dataset.homeIntro = 'skip';
+        return;
       }
 
-      root.dataset.homeIntro = 'skip';
+      document.cookie = `${cookieKey}=1; path=/; SameSite=Lax`;
+      root.dataset.homeIntro = 'play';
     })();
   </script>
 
@@ -36,12 +33,10 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
         <h1 id="home-title">Peiyuan Ma</h1>
         <p class="lead">
           cybersecurity student building practical projects<br class="desktop-break" />
-          running labs, and documenting what i learn
+          running labs, and documenting what i learn<span
+            class="lead-cursor"
+            aria-hidden="true">_</span>
         </p>
-        <div class="prompt-row">
-          <p class="prompt" aria-hidden="true">&gt;<span class="prompt-cursor">_</span></p>
-          <button class="intro-replay" type="button">Test effect</button>
-        </div>
       </div>
 
       <nav class="hero-links" aria-label="Explore my work">
@@ -75,10 +70,11 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
 
     const root = document.documentElement;
     const hero = document.querySelector('.hero-content');
+    const hello = document.querySelector('.hello');
     const title = document.querySelector('#home-title');
     const lead = document.querySelector('.lead');
-    const replayButton = document.querySelector('.intro-replay');
 
+    const helloText = hello?.textContent?.trim() ?? '';
     const titleText = title?.textContent?.trim() ?? '';
     const leadMarkup = lead?.innerHTML ?? '';
     const leadParts = lead
@@ -136,14 +132,16 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
     };
 
     const playIntro = async () => {
-      if (root.dataset.homeIntro !== 'play' || !hero || !title || !lead || isPlaying) return;
+      if (root.dataset.homeIntro !== 'play' || !hero || !hello || !title || !lead || isPlaying) return;
 
       isPlaying = true;
-      if (replayButton instanceof HTMLButtonElement) replayButton.disabled = true;
+      hello.textContent = '';
       title.textContent = '';
       lead.textContent = '';
       await wait(220);
 
+      await typeText(hello, helloText, 55);
+      await wait(140);
       await typeText(title, titleText, 48);
       await wait(120);
       await typeRichText(lead, leadParts, 16);
@@ -159,13 +157,7 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
       });
       root.dataset.homeIntro = 'complete';
       isPlaying = false;
-      if (replayButton instanceof HTMLButtonElement) replayButton.disabled = false;
     };
-
-    replayButton?.addEventListener('click', () => {
-      root.dataset.homeIntro = 'play';
-      void playIntro();
-    });
 
     void playIntro();
   </script>
@@ -204,6 +196,7 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
   }
 
   .hello {
+    min-height: 1.6em;
     margin: 0 0 1.2rem;
   }
 
@@ -229,44 +222,10 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
     margin: clamp(1.7rem, 3.5vh, 2.7rem) 0 0;
   }
 
-  .prompt-row {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-top: 1.65rem;
-  }
-
-  .prompt {
-    margin: 0;
-    color: var(--color-accent);
-    font-size: 1.05rem;
-  }
-
-  .prompt-cursor {
+  .lead-cursor {
+    display: inline-block;
+    margin-left: 0.14em;
     animation: cursor-blink 620ms steps(1, end) infinite;
-  }
-
-  .intro-replay {
-    padding: 0;
-    border: 0;
-    border-bottom: 1px solid transparent;
-    background: transparent;
-    color: var(--color-text-faint);
-    font: 400 0.72rem/1.2 var(--font-display);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: color 180ms ease, border-color 180ms ease, opacity 180ms ease;
-  }
-
-  .intro-replay:hover,
-  .intro-replay:focus-visible {
-    border-color: currentColor;
-    color: var(--color-text-heading);
-  }
-
-  .intro-replay:disabled {
-    cursor: default;
   }
 
   .hero-links {
@@ -324,21 +283,6 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
     visibility: hidden;
     opacity: 0;
     transform: translateY(0.8rem);
-  }
-
-  :global(html[data-home-intro='play']) .prompt,
-  :global(html[data-home-intro='reveal']) .prompt {
-    opacity: 0;
-  }
-
-  :global(html[data-home-intro='play']) .intro-replay,
-  :global(html[data-home-intro='reveal']) .intro-replay {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  :global(html[data-home-intro='complete']) .prompt {
-    animation: prompt-reveal 260ms ease both;
   }
 
   :global(html[data-home-intro='complete']) .hero-links a {
@@ -455,11 +399,6 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
     93% { opacity: 0; transform: translateX(0); }
   }
 
-  @keyframes prompt-reveal {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
   @keyframes link-reveal {
     from { opacity: 0; transform: translateY(0.7rem); }
     to { opacity: 1; transform: translateY(0); }
@@ -489,14 +428,6 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
       margin-top: 1.35rem;
     }
 
-    .prompt {
-      margin-top: 0;
-    }
-
-    .prompt-row {
-      margin-top: 1.2rem;
-    }
-
     .hero-links {
       grid-template-columns: 1fr;
       gap: 0.55rem;
@@ -512,7 +443,7 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
 
   @media (max-height: 720px) and (min-width: 761px) {
     .hello { margin-bottom: 0.75rem; }
-    .lead, .prompt-row { margin-top: 1rem; }
+    .lead { margin-top: 1rem; }
     .hero-links { margin-top: 1.5rem; }
   }
 
@@ -520,9 +451,7 @@ import NavigationIcon from '@/components/NavigationIcon.astro';
     .hero-links,
     .hero-links a,
     .hero-links .arrow,
-    .prompt,
-    .prompt-cursor,
-    .intro-replay {
+    .lead-cursor {
       animation: none !important;
       transition: none;
     }

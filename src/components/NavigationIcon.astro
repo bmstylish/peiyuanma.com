@@ -36,6 +36,9 @@ const iconSources = {
 
   .navigation-icon.nav {
     --icon-size: 46px;
+    /* brightness(0) flattens the art to black, invert(1) lifts it to pure
+       white; the alpha channel, and so the line work, is untouched. */
+    filter: brightness(0) invert(1);
   }
 
   .navigation-icon.hero {

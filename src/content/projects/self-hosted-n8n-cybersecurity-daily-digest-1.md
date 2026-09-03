@@ -1,9 +1,7 @@
 ---
-title: "Self-Hosted n8n cybersecurity daily digest "
-description: CyberSignal is a self-hosted n8n automation I built to collect and
-  filter cybersecurity news, vulnerabilities and threat research, then send a
-  short daily digest to Discord. It helps me stay up to date with the industry
-  and find topics worth looking into further.
+title: "CyberSignal: Self-Hosted Cybersecurity Daily Digest"
+description: A self-hosted n8n workflow that reads security news, threat
+  intelligence and CISA KEV every morning and posts a triaged digest to Discord.
 date: 2026-08-13
 tags:
   - n8n
@@ -18,55 +16,67 @@ tags:
   - JavaScript
 github: https://github.com/bmstylish/CyberSignal
 status: active
-lessons: I learned how to structure n8n workflows properly, prevent duplicate
-  outputs, use persistent memory, and decide when native nodes or custom code
-  were the better option.
-writeup: false
+lessons: Parallel branches in n8n do not merge themselves, and state you
+  cannot inspect is state you cannot debug.
+writeup: true
 order: 0
 draft: false
 ---
-## Overview
+## Why I built it
 
-CyberSignal is a self-hosted cybersecurity daily digest built with n8n, Docker, and Discord webhooks. It runs every morning at 7:00 AM and posts a concise cybersecurity update into a Discord channel.
+Every morning I was checking the same handful of places - security news, CISA KEV, SANS ISC, Project Zero - and still missing things. The bigger problem was that most of what I found was either irrelevant to anything I actually run, or a CVE number with no indication of whether it mattered.
 
-The goal was to create a practical learning tool for a cybersecurity student. Instead of manually checking multiple news sites, vulnerability feeds, and research blogs, CyberSignal collects the information automatically, ranks it, removes repeated stories, and formats the result into a readable Discord digest.
+CyberSignal is an n8n workflow that does that reading for me and posts a short digest to Discord at 7:00 every morning. It is deliberately not a CVE alert feed. What I wanted was triage: what changed overnight, and which one thing is worth an hour today.
 
-## What It Does
+## How it works
 
-CyberSignal collects from multiple sources including cybersecurity news feeds, threat intelligence sources, Google Project Zero, SANS ISC, and CISA KEV. The workflow then normalizes each item into a common format, scores it against my interests and homelab technologies, deduplicates repeated links, and sends a short daily summary to Discord.
+It runs on n8n Community Edition in Docker. Eight stages:
 
-The digest is grouped into sections:
+1. Schedule trigger at 07:00
+2. RSS and HTTP nodes fetch each source
+3. Merge the branches
+4. Normalize every item into one shape, then score it
+5. Drop anything already sent
+6. Format the Discord message
+7. Post to the webhook
+8. Write the new items back to memory
+
+Sources are security news feeds, threat intelligence, Google Project Zero, SANS ISC, and CISA KEV. Scoring is weighted toward the technologies in my own homelab, so something affecting Docker or a service I actually run outranks a product I will never touch.
+
+The digest is split into four sections:
 
 - Threat Watch
 - Learn This Week
 - Vulnerabilities To Know
 - Worth A Skim
 
-This keeps the automation from becoming only a CVE alert feed. It includes vulnerabilities, but also highlights attack campaigns, research, defensive techniques, and security technology.
+The split is the part I care about most. If the whole thing is a vulnerability list it becomes noise and I stop reading it after a week. Keeping a section for research and defensive technique means it is still worth opening on a quiet day.
 
-## Technical Implementation
+## Problem 1: one digest per source
 
-The project runs in Docker using n8n Community Edition. The workflow uses native n8n RSS and HTTP nodes for reliable source fetching, then merges the source branches before processing.
+The first working version posted several Discord messages every morning instead of one.
 
-The main workflow stages are:
+I had connected each RSS branch straight into the downstream processing path. I assumed n8n would collect the parallel branches for me before the next node ran. It does not. Each branch carries its own execution all the way to the end, so the format-and-post stage ran once per source.
 
-1. Scheduled trigger at 7:00 AM
-2. RSS and HTTP source fetching
-3. Source merge
-4. Normalization and scoring
-5. Seen-item filtering
-6. Discord message formatting
-7. Discord webhook delivery
-8. Seen-item memory update
+The fix was an explicit merge stage before normalization, so everything arrives as one item set and the Discord node runs once. Obvious in hindsight. It cost me time because the workflow looked correct on the canvas and only misbehaved at the very last node.
 
-I added file-backed memory using a mounted `data/seen-items.json` file so the workflow can remember which URLs and CVEs were already sent. This prevents the digest from repeating the same stories every day.
+## Problem 2: memory that did not survive testing
 
-## Challenges
+Deduplication has to remember what it already sent, or the same story reappears every morning until it falls off the feed.
 
-One of the main challenges was understanding how n8n executes parallel branches. An early version connected multiple RSS branches directly into the downstream processing path, which caused multiple Discord messages to be sent. I fixed this by introducing a merge stage before normalization.
+I first used n8n's workflow static data. On scheduled runs it mostly worked. During manual testing it was not reliable enough to trust, and if I cannot trust the memory while developing then I cannot tell whether a filter change worked or the memory just lost state.
 
-Another challenge was persistent memory. n8n workflow static data was not reliable enough during manual testing, so I moved to a simple JSON file mounted into the container. This made the behavior easier to test, debug, migrate, and back up.
+I moved it to a JSON file, `data/seen-items.json`, mounted into the container. Less elegant than static data, but I can read it, edit it, back it up, and carry it to another host. Being able to `cat` the state file and see exactly which URLs and CVEs were recorded turned the filtering logic into something I could debug instead of guess at.
 
-## Outcome
+## Where it is now
 
-CyberSignal now runs as a practical cybersecurity news assistant. It gives me a short, relevant daily update while preserving source links for deeper reading. It is designed to be migrated from my local PC Docker environment to a homelab server so it can run continuously.
+It now runs in Docker on my homelab server, which stays on, so the digest lands every morning whether or not my PC is awake. Moving it off my desktop was the last thing standing between this being a script I ran and a service I rely on.
+
+Current limitations:
+
+- Scoring is hand-tuned keyword weighting, not anything clever, and it needs adjusting whenever my homelab changes.
+- Deduplication keys on URL and CVE, so the same story republished under a different link can still get through.
+
+## What I would do differently
+
+Design the branch topology before building nodes. Both problems came from the same habit: wiring something that worked for one source and assuming it would scale to six. Neither showed up until the workflow ran for real.
