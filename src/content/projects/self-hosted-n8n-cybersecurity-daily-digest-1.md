@@ -16,15 +16,15 @@ tags:
   - JavaScript
 github: https://github.com/bmstylish/CyberSignal
 status: active
-lessons: Parallel branches in n8n do not merge themselves, and state you
-  cannot inspect is state you cannot debug.
+lessons: Parallel branches in n8n do not merge themselves, and state you cannot
+  inspect is state you cannot debug.
 writeup: true
 order: 0
 draft: false
 ---
 ## Why I built it
 
-Every morning I was checking the same handful of places - security news, CISA KEV, SANS ISC, Project Zero - and still missing things. The bigger problem was that most of what I found was either irrelevant to anything I actually run, or a CVE number with no indication of whether it mattered.
+Every morning I was checking the same handful of places: security news, CISA KEV, SANS ISC, Project. But I'm still missing things... The bigger problem was that most of what I found was either irrelevant to anything I actually run, or a CVE number with no indication of whether it mattered.
 
 CyberSignal is an n8n workflow that does that reading for me and posts a short digest to Discord at 7:00 every morning. It is deliberately not a CVE alert feed. What I wanted was triage: what changed overnight, and which one thing is worth an hour today.
 
