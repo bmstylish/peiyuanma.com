@@ -29,6 +29,8 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
+    media_folder: "{{media_folder}}/blog/{{slug}}"
+    public_folder: "{{public_folder}}/blog/{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "string" }
@@ -69,6 +71,8 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
+    media_folder: "{{media_folder}}/writeups/{{slug}}"
+    public_folder: "{{public_folder}}/writeups/{{slug}}"
     preview_path: "writeups/{{source}}/{{slug}}"
     sortable_fields: ["source", "date", "status", "title"]
     summary: "{{source}} — {{title}} ({{status}})"
@@ -97,6 +101,8 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
+    media_folder: "{{media_folder}}/projects/{{slug}}"
+    public_folder: "{{public_folder}}/projects/{{slug}}"
     sortable_fields: ["date", "order", "title", "status"]
     summary: "{{date}} — {{title}} — {{status}}"
     fields:
@@ -121,6 +127,8 @@ collections:
     slug: "day-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
+    media_folder: "{{media_folder}}/journal/{{slug}}"
+    public_folder: "{{public_folder}}/journal/{{slug}}"
     sortable_fields: ["day", "status", "title"]
     summary: "Day {{day}} — {{title}} ({{status}})"
     fields:

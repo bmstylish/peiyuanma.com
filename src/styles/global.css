@@ -180,6 +180,46 @@ hr {
   margin: calc(var(--spacing-unit) * 6) 0;
 }
 
+/* Content authored in Decap is rendered outside Astro's component scope. */
+.rich-text :is(img, video) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: calc(var(--spacing-unit) * 3) auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.rich-text iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: calc(var(--spacing-unit) * 3) auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.rich-text figure {
+  max-width: 100%;
+  margin: calc(var(--spacing-unit) * 3) 0;
+}
+
+.rich-text figure :is(img, video, iframe) {
+  margin-block: 0;
+}
+
+.rich-text figcaption {
+  margin-top: var(--spacing-unit);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.rich-text :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 .status-box {
   background: var(--color-surface);
   border: 1px solid var(--color-border);

