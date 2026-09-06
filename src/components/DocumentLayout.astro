@@ -1,0 +1,42 @@
+---
+import DocumentOutline from '@/components/DocumentOutline.astro';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+---
+
+<div class="document-layout">
+  <DocumentOutline headings={headings} variant="desktop" />
+  <div class="document-column">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .document-layout {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 760px);
+    justify-content: center;
+    align-items: start;
+    gap: clamp(32px, 4vw, 56px);
+  }
+
+  .document-column {
+    min-width: 0;
+  }
+
+  @media (max-width: 959px) {
+    .document-layout {
+      display: block;
+    }
+  }
+</style>

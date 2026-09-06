@@ -77,6 +77,10 @@ main {
   padding: calc(var(--spacing-unit) * 4);
 }
 
+main.is-wide {
+  max-width: 1200px;
+}
+
 body.is-home main {
   display: flex;
   min-height: 0;
@@ -218,6 +222,10 @@ hr {
 
 .rich-text :not(pre) > code {
   overflow-wrap: anywhere;
+}
+
+.rich-text :is(h1, h2, h3, h4) {
+  scroll-margin-top: calc(var(--spacing-unit) * 3);
 }
 
 .status-box {

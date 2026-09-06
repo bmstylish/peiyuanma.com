@@ -7,11 +7,13 @@ import '@/styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  wide?: boolean;
 }
 
 const {
   title = 'Security Engineer Portfolio',
-  description = 'Cybersecurity research, projects, and technical writing'
+  description = 'Cybersecurity research, projects, and technical writing',
+  wide = false,
 } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 const isHome = Astro.url.pathname === '/';
@@ -31,7 +33,7 @@ const isHome = Astro.url.pathname === '/';
 <body class:list={{ 'is-home': isHome }}>
   <ParticleBackground />
   <Header />
-  <main>
+  <main class:list={{ 'is-wide': wide }}>
     <slot />
   </main>
   <Footer />

@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import DocumentLayout from '@/components/DocumentLayout.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
 import { getCtfWeekDetail } from '@/data/ctfWeeks';
 import { journalWeekPath, titleSlug } from '@/utils/routes';
 
@@ -28,7 +30,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, project } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const formattedDate = entry.data.date?.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
@@ -37,8 +39,9 @@ const formattedDate = entry.data.date?.toLocaleDateString('en-US', {
 const week = getCtfWeekDetail(entry.data.week);
 ---
 
-<BaseLayout title={`Day ${entry.data.day}: ${entry.data.title} • ${project.data.title}`} description={entry.data.description}>
-  <article class="daily-entry">
+<BaseLayout title={`Day ${entry.data.day}: ${entry.data.title} • ${project.data.title}`} description={entry.data.description} wide>
+  <DocumentLayout headings={headings}>
+    <article class="daily-entry">
     <header class="entry-header">
       <p class="day-label">Day {entry.data.day} · {week.label}</p>
       <h1>{entry.data.title}</h1>
@@ -50,9 +53,11 @@ const week = getCtfWeekDetail(entry.data.week);
       </div>
     </header>
 
-    <div class="entry-content rich-text">
-      <Content />
-    </div>
+      <DocumentOutline headings={headings} variant="mobile" />
+
+      <div class="entry-content rich-text">
+        <Content />
+      </div>
 
     <footer class="entry-footer">
       <a
@@ -62,7 +67,8 @@ const week = getCtfWeekDetail(entry.data.week);
         ← Back to {week.label.toLowerCase()}
       </a>
     </footer>
-  </article>
+    </article>
+  </DocumentLayout>
 </BaseLayout>
 
 <style>

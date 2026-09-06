@@ -204,3 +204,54 @@ test('writeup media loads and stays inside the article', async ({ page }) => {
   await expectNoHorizontalOverflow(page);
   expect(browserErrors).toEqual([]);
 });
+
+test('document outlines navigate every Markdown content type', async ({ page, isMobile }) => {
+  const browserErrors = collectBrowserErrors(page);
+  const documents = [
+    {
+      path: glitchWriteupPath,
+      heading: 'API Investigation',
+      slug: 'api-investigation',
+    },
+    {
+      path: journalArticlePath,
+      heading: 'Removing the deadline',
+      slug: 'removing-the-deadline',
+    },
+    {
+      path: projectPath,
+      heading: 'How a day works now',
+      slug: 'how-a-day-works-now',
+    },
+    {
+      path: dayThirtyPath,
+      heading: 'Corresponding practice',
+      slug: 'corresponding-practice',
+    },
+  ];
+
+  for (const document of documents) {
+    await page.goto(document.path);
+
+    const outline = page.locator(
+      `[data-outline-variant="${isMobile ? 'mobile' : 'desktop'}"]`,
+    );
+    await expect(outline).toBeVisible();
+
+    if (isMobile) {
+      await outline.locator('summary').click();
+    }
+
+    const headingLink = outline.locator(`[data-outline-link="${document.slug}"]`);
+    await expect(headingLink).toHaveText(document.heading);
+    await expect(headingLink).toBeVisible();
+    await headingLink.click();
+
+    await expect(page).toHaveURL(new RegExp(`#${document.slug}$`));
+    await expect(page.locator(`#${document.slug}`)).toBeInViewport();
+    await expect(headingLink).toHaveAttribute('aria-current', 'location');
+    await expectNoHorizontalOverflow(page);
+  }
+
+  expect(browserErrors).toEqual([]);
+});

@@ -1,0 +1,248 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  variant: 'desktop' | 'mobile';
+}
+
+const { headings, variant } = Astro.props;
+const outlineHeadings = headings.filter(({ depth }) => depth >= 1 && depth <= 4);
+const minimumDepth = Math.min(...outlineHeadings.map(({ depth }) => depth));
+---
+
+{outlineHeadings.length > 0 && variant === 'desktop' && (
+  <aside class="document-outline desktop-outline" data-outline-variant="desktop">
+    <p class="outline-label">Contents</p>
+    <nav aria-label="On this page">
+      <ol>
+        {outlineHeadings.map((heading) => (
+          <li class={`outline-level-${Math.min(heading.depth - minimumDepth, 2)}`}>
+            <a href={`#${heading.slug}`} data-outline-link={heading.slug}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </aside>
+)}
+
+{outlineHeadings.length > 0 && variant === 'mobile' && (
+  <details class="mobile-outline" data-outline-variant="mobile">
+    <summary>
+      <span>Contents</span>
+      <span class="outline-count">{outlineHeadings.length} sections</span>
+    </summary>
+    <nav aria-label="On this page">
+      <ol>
+        {outlineHeadings.map((heading) => (
+          <li class={`outline-level-${Math.min(heading.depth - minimumDepth, 2)}`}>
+            <a href={`#${heading.slug}`} data-outline-link={heading.slug}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </details>
+)}
+
+<script>
+  const setupDocumentOutline = () => {
+    const outlineLinks = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('[data-outline-link]'),
+    );
+
+    if (outlineLinks.length === 0) return;
+
+    const headingIds = [...new Set(outlineLinks.map((link) => link.dataset.outlineLink!))];
+    const pageHeadings = headingIds
+      .map((id) => document.getElementById(id))
+      .filter((heading): heading is HTMLElement => Boolean(heading));
+
+    const setActiveHeading = (id: string) => {
+      outlineLinks.forEach((link) => {
+        if (link.dataset.outlineLink === id) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const updateActiveHeading = () => {
+      const activationLine = Math.min(180, window.innerHeight * 0.25);
+      let activeHeading = pageHeadings[0];
+
+      for (const heading of pageHeadings) {
+        if (heading.getBoundingClientRect().top <= activationLine) {
+          activeHeading = heading;
+        } else {
+          break;
+        }
+      }
+
+      if (activeHeading) setActiveHeading(activeHeading.id);
+    };
+
+    let frame: number | undefined;
+    const requestOutlineUpdate = () => {
+      if (frame !== undefined) return;
+
+      frame = window.requestAnimationFrame(() => {
+        updateActiveHeading();
+        frame = undefined;
+      });
+    };
+
+    outlineLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        setActiveHeading(link.dataset.outlineLink!);
+        link.closest('details')?.removeAttribute('open');
+      });
+    });
+
+    window.addEventListener('scroll', requestOutlineUpdate, { passive: true });
+    window.addEventListener('resize', requestOutlineUpdate, { passive: true });
+    updateActiveHeading();
+  };
+
+  setupDocumentOutline();
+</script>
+
+<style>
+  .document-outline {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    padding: 4px 0 4px 18px;
+    overflow-y: auto;
+    border-left: 1px solid var(--color-border);
+    scrollbar-width: thin;
+  }
+
+  .outline-label {
+    margin: 0 0 14px;
+    color: var(--color-text-heading);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  nav ol {
+    margin: 0;
+    list-style: none;
+  }
+
+  nav li {
+    margin: 0;
+  }
+
+  nav a {
+    position: relative;
+    display: block;
+    padding: 6px 8px;
+    color: var(--color-text-faint);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    transition: color 150ms ease, background 150ms ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--color-text-heading);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  nav a[aria-current='location'] {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--color-text-heading);
+  }
+
+  nav a[aria-current='location']::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    bottom: 9px;
+    left: -19px;
+    width: 2px;
+    background: var(--color-accent);
+  }
+
+  .outline-level-1 a {
+    padding-left: 18px;
+  }
+
+  .outline-level-2 a {
+    padding-left: 28px;
+    font-size: 0.74rem;
+  }
+
+  .mobile-outline {
+    display: none;
+    margin: -16px 0 40px;
+    border: 1px solid var(--color-border);
+    background: rgba(8, 8, 8, 0.92);
+  }
+
+  .mobile-outline summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 16px;
+    color: var(--color-text-heading);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .mobile-outline summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-outline summary::after {
+    content: '+';
+    margin-left: auto;
+    font-family: var(--font-mono);
+  }
+
+  .mobile-outline[open] summary::after {
+    content: '−';
+  }
+
+  .mobile-outline nav {
+    max-height: min(52vh, 420px);
+    padding: 6px 12px 14px 18px;
+    overflow-y: auto;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .outline-count {
+    color: var(--color-text-faint);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  @media (max-width: 959px) {
+    .desktop-outline {
+      display: none;
+    }
+
+    .mobile-outline {
+      display: block;
+    }
+  }
+</style>

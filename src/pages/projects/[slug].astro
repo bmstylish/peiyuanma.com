@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import DocumentLayout from '@/components/DocumentLayout.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
 import CtfWeekCard from '@/components/CtfWeekCard.astro';
 import TagLink from '@/components/TagLink.astro';
 import { getCtfWeekDetails } from '@/data/ctfWeeks';
@@ -44,7 +46,7 @@ export async function getStaticPaths() {
 const { project, journalEntries, redirectTo } = Astro.props;
 if (redirectTo) return Astro.redirect(redirectTo, 301);
 
-const { Content } = await project.render();
+const { Content, headings } = await project.render();
 const journalWeeks = getCtfWeekDetails(journalEntries.map((entry) => entry.data.week));
 const formattedDate = project.data.date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -53,8 +55,9 @@ const formattedDate = project.data.date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${project.data.title} • Projects`} description={project.data.description}>
-  <article class:list={['project-writeup', { 'has-journal': journalEntries.length > 0 }]}>
+<BaseLayout title={`${project.data.title} • Projects`} description={project.data.description} wide>
+  <DocumentLayout headings={headings}>
+    <article class:list={['project-writeup', { 'has-journal': journalEntries.length > 0 }]}>
     <header class="project-header">
       <div class="project-heading">
         <h1>{project.data.title}</h1>
@@ -68,9 +71,11 @@ const formattedDate = project.data.date.toLocaleDateString('en-US', {
       </div>
     </header>
 
-    <div class="project-content rich-text">
-      <Content />
-    </div>
+      <DocumentOutline headings={headings} variant="mobile" />
+
+      <div class="project-content rich-text">
+        <Content />
+      </div>
 
     {journalEntries.length > 0 && (
       <section class="weeks-section" aria-labelledby="weeks-heading">
@@ -102,7 +107,8 @@ const formattedDate = project.data.date.toLocaleDateString('en-US', {
     <footer class="project-footer">
       <a href="/projects/" class="back-link">← Back to projects</a>
     </footer>
-  </article>
+    </article>
+  </DocumentLayout>
 </BaseLayout>
 
 <style>

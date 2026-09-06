@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import DocumentLayout from '@/components/DocumentLayout.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
 import TagLink from '@/components/TagLink.astro';
 import { sourceSlug, titleSlug, writeupPath, writeupSourcePath } from '@/utils/routes';
 
@@ -29,7 +31,7 @@ export async function getStaticPaths() {
 const { lab, redirectTo } = Astro.props;
 if (redirectTo) return Astro.redirect(redirectTo, 301);
 
-const { Content } = await lab.render();
+const { Content, headings } = await lab.render();
 const allSources = await getCollection('writeupSources');
 const sourceId = sourceSlug(lab.data.source);
 const source = allSources.find(
@@ -43,8 +45,9 @@ const formattedDate = lab.data.date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${lab.data.title} • Writeups`} description={lab.data.description}>
-  <article class="lab-post">
+<BaseLayout title={`${lab.data.title} • Writeups`} description={lab.data.description} wide>
+  <DocumentLayout headings={headings}>
+    <article class="lab-post">
     <header class="post-header">
       <h1>{lab.data.title}</h1>
 
@@ -64,16 +67,19 @@ const formattedDate = lab.data.date.toLocaleDateString('en-US', {
       </div>
     </header>
 
-    <div class="post-content rich-text">
-      <Content />
-    </div>
+      <DocumentOutline headings={headings} variant="mobile" />
+
+      <div class="post-content rich-text">
+        <Content />
+      </div>
 
     <footer class="post-footer">
       <a href={writeupSourcePath(sourceId)} class="back-link">
         ← Back to {source?.data.name ?? 'writeups'}
       </a>
     </footer>
-  </article>
+    </article>
+  </DocumentLayout>
 </BaseLayout>
 
 <style>

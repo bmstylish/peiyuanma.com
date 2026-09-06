@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import DocumentLayout from '@/components/DocumentLayout.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
 import TagLink from '@/components/TagLink.astro';
 import {
   BLOG_CATEGORIES,
@@ -23,7 +25,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 const categoryDetails = BLOG_CATEGORIES[post.data.category];
 const formattedDate = post.data.date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -32,8 +34,9 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${post.data.title} • Blog`} description={post.data.description}>
-  <article class="blog-post">
+<BaseLayout title={`${post.data.title} • Blog`} description={post.data.description} wide>
+  <DocumentLayout headings={headings}>
+    <article class="blog-post">
     <header class="post-header">
       <a class="post-category" href={blogCategoryPath(post.data.category)}>
         {categoryDetails.label}
@@ -49,16 +52,19 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
       </div>
     </header>
 
-    <div class="post-content rich-text">
-      <Content />
-    </div>
+      <DocumentOutline headings={headings} variant="mobile" />
+
+      <div class="post-content rich-text">
+        <Content />
+      </div>
 
     <footer class="post-footer">
       <a href={blogCategoryPath(post.data.category)} class="back-link">
         ← Back to {categoryDetails.label}
       </a>
     </footer>
-  </article>
+    </article>
+  </DocumentLayout>
 </BaseLayout>
 
 <style>
