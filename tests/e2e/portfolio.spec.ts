@@ -205,6 +205,45 @@ test('writeup media loads and stays inside the article', async ({ page }) => {
   expect(browserErrors).toEqual([]);
 });
 
+test('BSides cards open readable articles with and without section headings', async ({ page, isMobile }) => {
+  const browserErrors = collectBrowserErrors(page);
+  const sourcePath = '/writeups/bsides2026-ctf/';
+
+  // Small phones previously overflowed because card metadata squeezed the title.
+  if (isMobile) await page.setViewportSize({ width: 320, height: 851 });
+
+  for (const title of ['gallery CTF Write-up', 'guesstype CTF Write-up']) {
+    await page.goto(sourcePath);
+    await expect(page.getByText('2 challenges', { exact: true })).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+    await page.getByRole('link', { name: title, exact: true }).click();
+    await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+    await expect(page).toHaveTitle(`${title} • Writeups`);
+    await expectNoHorizontalOverflow(page);
+
+    if (title.startsWith('guesstype')) {
+      await expect(page.locator('[data-outline-variant]')).toHaveCount(0);
+      const column = await page.locator('.document-column').boundingBox();
+      const main = await page.locator('main').boundingBox();
+      expect(column!.width).toBeGreaterThan(isMobile ? 250 : 600);
+      if (!isMobile) {
+        expect(Math.abs(column!.x + column!.width / 2 - (main!.x + main!.width / 2))).toBeLessThan(1);
+      }
+    } else {
+      const outline = page.locator(`[data-outline-variant="${isMobile ? 'mobile' : 'desktop'}"]`);
+      if (isMobile) await outline.locator('summary').click();
+      await outline.getByRole('link', { name: 'Reading the Output' }).click();
+      await expect(page).toHaveURL(/#reading-the-output$/);
+      await expect(page.locator('#reading-the-output')).toBeInViewport();
+    }
+
+    await page.getByRole('link', { name: '← Back to bsides2026-CTF', exact: true }).click();
+    await expect(page).toHaveURL(sourcePath);
+  }
+
+  expect(browserErrors).toEqual([]);
+});
+
 test('document outlines navigate every Markdown content type', async ({ page, isMobile }) => {
   const browserErrors = collectBrowserErrors(page);
   const documents = [

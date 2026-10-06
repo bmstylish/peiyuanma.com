@@ -12,9 +12,10 @@ interface Props {
 }
 
 const { headings } = Astro.props;
+const hasOutline = headings.some(({ depth }) => depth >= 1 && depth <= 4);
 ---
 
-<div class="document-layout">
+<div class:list={['document-layout', { 'without-outline': !hasOutline }]}>
   <DocumentOutline headings={headings} variant="desktop" />
   <div class="document-column">
     <slot />
@@ -32,6 +33,10 @@ const { headings } = Astro.props;
 
   .document-column {
     min-width: 0;
+  }
+
+  .document-layout.without-outline {
+    grid-template-columns: minmax(0, 760px);
   }
 
   @media (max-width: 959px) {
