@@ -8,7 +8,7 @@ tags:
   - picoctf
   - challenge
 status: planned
-draft: false
+draft: true
 ---
 ## Challenge notes
 
